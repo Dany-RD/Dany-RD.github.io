@@ -202,3 +202,14 @@
   });
 
 })();
+
+window.addEventListener('load', function () {
+  const grid = document.querySelector('.isotope-container');
+  if (grid) {
+    const iso = new Isotope(grid, {
+      itemSelector: '.portfolio-item',
+      layoutMode: 'masonry',
+    });
+    iso.layout(); // Ensure layout is recalculated
+  }
+});
