@@ -140,7 +140,7 @@
               <ul>
                 <li><strong>Category</strong>: Action Roguelite</li>
                 <li><strong>Engine</strong>: Unity</li>
-                <li><strong>Project date</strong>: 2023</li>
+                <li><strong>Project date</strong>: 2024</li>
                 <li><strong>Itchio</strong>: <a href="https://danyrd.itch.io/whydah"> Link </a></li>
               </ul>
             </div>
@@ -153,6 +153,50 @@
           </div>
 
         </div>
+
+        <br>
+        <h1>Most Important Implementations</h1>
+        <br>
+
+        <h4>Procedural Generation:</h4>
+        <p>
+          In this project, it was important to make each attempt feel unique, which is why we decided to generate a different ocean for each one. Since we can't predict the player's exact direction (though the camera encourages upward movement, 
+          the player has full freedom), it's impossible to precalculate the infinite number of variables. As a result, the ocean is generated dynamically as the player progresses through the sea. This introduces challenges, as a significant 
+          amount of calculations are required, but the player should never be aware of this process. Multithreading was key in ensuring this seamless experience.
+          <br>
+          On the other hand, it doesn't make sense to create and destroy each landmark as the player approaches or moves away, so an object pool became essential. Similarly, the sea segments are reused and simply repositioned around the player 
+          in a way that ensures they don't notice.
+          <br> 
+          Overall, the implementation of dynamic ocean generation and object pooling greatly enhanced the gameplay experience, especially given that the target device was mobile. By generating a unique ocean for each attempt and utilizing 
+          multithreading, we were able to ensure smooth performance on mobile devices while offering players a fresh and engaging experience each time they play. The use of an object pool to manage landmarks and sea segments helped optimize 
+          resource usage, reducing the need to create and destroy objects frequently. This approach ensured the game ran efficiently and responsively, providing a seamless and immersive world for players to explore without interruptions or lag.
+        </p>
+
+        <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/procedural_exp.mp4" type="video/mp4">
+        </video>
+
+        <br><br><br>
+
+        <h4>Tutorialization:</h4>
+        <p>
+          The tutorial in this game was very important. There are two stores the player needs to understand, and while the combat system may seem simple, it requires a certain level of skill. For new players, the entry into Whydah can be a bit 
+          challenging. To ease these issues, I dedicated a lot of time to scripting an interactive tutorial, where the game sets simple objectives to help familiarize players with the systems and ship controls, while providing visual cues for the 
+          actions they need to take.
+        </p>
+        <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/tutorial_exp.mp4" type="video/mp4">
+        </video>
+
+        <br><br><br>
+
+        <h4>Graphic Optimization for Mobile:</h4>
+        The graphical computational power of a mobile device is limited, especially when targeting the Android market with so many different devices. As a result, we had to make compromises in certain graphical aspects. In this project, the screen 
+        is almost ninety percent water, so we initially implemented highly detailed water. While it was still stylized, the depth effect was better, as were the light reflections. For obvious reasons, this effect had to be scaled back—the reflections 
+        were nearly eliminated, and the depth was reduced to just the edges of the islands and ships. Even then, it was still too resource-intensive, limiting the number of effects we could display. Further limitations had to be applied to the water 
+        and other elements.
+        <br>
+        Removing the water's translucency could have given us more leeway, but the depth effect relied on it, so we chose not to go that route. Instead, we opted for other solutions, such as removing the shadows and simplifying its behavior.
 
       </div>
 
