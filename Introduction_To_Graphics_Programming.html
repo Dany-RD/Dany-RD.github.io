@@ -103,31 +103,31 @@
               <div class="swiper-wrapper align-items-center">
 
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/Rainbow_lab_cap_0.png" alt="">
+                  <img src="assets/img/portfolio/OGL_0.png" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/Rainbow_lab_cap_1.png" alt="">
+                  <img src="assets/img/portfolio/OGL_1.png" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/Rainbow_lab_cap_2.png" alt="">
+                  <img src="assets/img/portfolio/OGL_2.png" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/Rainbow_lab_cap_3.png" alt="">
+                  <img src="assets/img/portfolio/OGL_3.png" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/Rainbow_lab_cap_4.png" alt="">
+                  <img src="assets/img/portfolio/OGL_4.png" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/Rainbow_lab_cap_5.png" alt="">
+                  <img src="assets/img/portfolio/OGL_5.png" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/Rainbow_lab_cap_6.png" alt="">
+                  <img src="assets/img/portfolio/OGL_6.png" alt="">
                 </div>
 
               </div>
@@ -142,6 +142,7 @@
                 <li><strong>Topic</strong>: Graphic Programming</li>
                 <li><strong>API</strong>: OpenGL</li>
                 <li><strong>Project date</strong>: 2023</li>
+                <li><strong>Video</strong>: <a href="https://youtu.be/3IeOt4Ab08s?si=khe9_jkExFj1PLH8"> Link </a></li>
                 <li><strong>Academic Project</strong></li>
               </ul>
             </div>
@@ -165,7 +166,10 @@
           were developed on top of this layer, with some of the most important being:
         </p>
         <br>
-        <h4>Procedural Generation of an Infinite Terrain:</h4>
+        <h4>Procedural Generation of an Infinite Terrain:</h4><br>
+                <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/OGL_exp_0.mp4" type="video/mp4">
+        </video>
         <p>Nine terrain tiles are used (three rows and three columns) that are repositioned to always keep the user at
           the center, using multithreading for fast generation of each tile. When the terrain detects that the user is
           no longer in the center, three of the tiles are moved and recalculated toward the new nearest side using
@@ -212,56 +216,36 @@ terrains[7].swap(terrains[8]);
         <br>
         <br>
         <h4>Navigating a Procedural Terrain Without Using Physics:</h4>
+        <br>
+                <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/OGL_exp_1.mp4" type="video/mp4">
+          </video>
         <p>First, controls are mapped so that the user can operate the vehicle, using a few tricks to give the car
           weight and acceleration; all of this is processed every frame.
         </p>
         <br>
         <pre>
-void CarEntity::Update(float delta_time)
-{
-    bool in_movement = (speed_ > 0.1f || speed_ < -0.1f);
+bool in_movement = (speed_ > 0.1f || speed_ < -0.1f);
+if (in_movement) {
     //CarRotation
-    if (in_movement) {
-        if (IsSpecialKeyPressed(kSpecialKey_Left)) {
-            UpdateChasisRotation(rotate_speed_ * delta_time * (speed_ / max_speed));
-        }
-
-        if (IsSpecialKeyPressed(kSpecialKey_Right)) {
-            UpdateChasisRotation(-rotate_speed_ * delta_time * (speed_ / max_speed));
-        }
-    }
-    bool accelerating = false;
-    if (IsSpecialKeyPressed(kSpecialKey_Up)) {
-        speed_ += (acceleration_ * delta_time);
-        
-        if (speed_ > max_speed) speed_ = max_speed;
-        else accelerating = true;
-    }
-    else if (IsSpecialKeyPressed(kSpecialKey_Down)) {
-        speed_ -= (acceleration_ * delta_time);
-        if (speed_ < -(max_speed * 0.5f)) speed_ = -(max_speed * 0.5f);
-        else accelerating = true;
-    }
-    else if (in_movement){
-        speed_ -= (speed_ * 0.5f * delta_time);
-    }
-    else {
-        speed_ = 0;
-    }
-    for (int i = 0; i < 4; i++) {
-        particles[i]->is_emiting = accelerating;
-    }
-    const float* car_pos = car_parent->position();
-    float new_car_pos[3];
-    new_car_pos[2] = car_pos[2] +(forward.z * delta_time * speed_);
-    new_car_pos[1] = car_pos[1];
-    new_car_pos[0] = car_pos[0] +(forward.x * delta_time * speed_);
-    car_parent->set_position(new_car_pos);
-
-    
-    UpdateChasisPosition(delta_time);
+    UpdateChasisRotation(...); //To Left or Right
 }
-
+bool accelerating = false;
+if (IsSpecialKeyPressed(kSpecialKey_Up)) {
+    //Accelerate
+}
+else if (IsSpecialKeyPressed(kSpecialKey_Down)) {
+    //SlowDown
+}
+else if (in_movement){
+    //Inertia
+}
+else {
+    //Stoped
+}
+float new_car_pos[3];
+new_car_pos = ...;
+car_parent->set_position(new_car_pos);
         </pre>
         <br>
         <p>Then, to simulate movement over an uneven surface, the same noise applied to the terrain is used to calculate
@@ -269,82 +253,47 @@ void CarEntity::Update(float delta_time)
         </p>
         <br>
         <pre>
-void CarEntity::UpdateChasisRotation(float rotation_radian) {
-    Mat4 rotation = Mat4::RotateY(rotation_radian);
-    forward = rotation.TransformVec3(forward);
-    Vec3 forward_global(0.0f, 0.0f, -1.0f);
-    float angle = Vec3::Angle(forward, forward_global);
-    angle = (angle * (180.0f / M_PI));
-    if (forward.x > 0) {
-        angle = 180.0f + (180.0f - angle);
-    }
-    car_parent->set_rotation_xyz(0.0f, angle, 0.0f);
+float chasis_pos[3];
+chasis_pos[0] = 0;
+chasis_pos[1] = 0;
+chasis_pos[2] = 0;
+float y_positions[4];
+
+for (int i = 0; i < 4; i++) {
+    y_positions[i] = ...; //Height of each wheel
+    chasis_pos[1] += y_positions[i]; //Average Height For the Main Frame
 }
 
-void CarEntity::UpdateChasisPosition(float delta_time) {
-    float chasis_pos[3];
-    chasis_pos[0] = 0;
-    chasis_pos[1] = 0;
-    chasis_pos[2] = 0;
+Vec3 front;
+Vec3 back;
+Vec3 righ_side;
+Vec3 left_side;
 
-    float y_positions[4];
-    for (int i = 1; i < 5; i++) {
-        parts[i]->set_HPR(0.0f, ((float)ESAT::Time()) * speed_ / 20.0f, 0.0f);
+Vec3 forward;
+Vec3 right;
 
-        Mat4 global_trans = GetWorldTransform(parts[i].get());
-        particles[i-1]->update(delta_time, { global_trans.m[12], global_trans.m[13]- 0.2f, global_trans.m[14] });
-        y_positions[i - 1] = 0.2f + SimplexNoise::noise(global_trans.m[12] * procedural_terrain->noise_size(), 
-                                                        global_trans.m[14] * procedural_terrain->noise_size()) * procedural_terrain->height_mult(); 
-        chasis_pos[1] += y_positions[i - 1];
-    }
+//Middle point of the front
+front = ...;
 
-    Vec3 front;
-    Vec3 back;
-    Vec3 righ_side;
-    Vec3 left_side;
+//Middle point of the back
+back = ...;
 
-    Vec3 forward;
-    Vec3 right;
+// Vector forward
+forward = back - front;
 
-    //Middle point of the front
-    const float* front_pos = parts[1]->position();
-    const float* front_pos2 = parts[3]->position();
-    front.x = (front_pos[0] + front_pos2[0]) * 0.5f;
-    front.y = (y_positions[0] + y_positions[2]) * 0.5f;
-    front.z = (front_pos[2] + front_pos2[2]) * 0.5f;
+// Middle point of the left
+left_side = ...;
 
-    //Middle point of the back
-    const float* back_pos = parts[2]->position();
-    const float* back_pos2 = parts[4]->position();
-    back.x = (back_pos[0] + back_pos2[0]) * 0.5f;
-    back.y = (y_positions[1] + y_positions[3]) * 0.5f;
-    back.z = (back_pos[2] + back_pos2[2]) * 0.5f;
+// Middle point of the right
+righ_side = ...;
 
-    // Vector forward
-    forward = back - front;
+//Vector right
+right = righ_side - left_side;
 
-    // Middle point of the left
-    left_side.x = (front_pos[0] + back_pos[0]) * 0.5f;
-    left_side.y = (y_positions[0] + y_positions[1]) * 0.5f;
-    left_side.z = (front_pos[2] + back_pos[2]) * 0.5f;
-
-    // Middle point of the right
-    righ_side.x = (front_pos2[0] + back_pos2[0]) * 0.5f;
-    righ_side.y = (y_positions[2] + y_positions[3]) * 0.5f;
-    righ_side.z = (front_pos2[2] + back_pos2[2]) * 0.5f;
-
-    //Vector right
-    right = righ_side - left_side;
-
-    float x_rotation = Vec3::Angle(forward, Vec3::up);
-    x_rotation = (x_rotation * (180.0f / M_PI)) - 90.0f;
-    float z_rotation = Vec3::Angle(right, Vec3::up);
-    z_rotation = (z_rotation * (180.0f / M_PI)) - 90.0f;
-    chasis_pos[1] = ((chasis_pos[1] * 0.25f) + 0.23f);
-    parts[0]->set_position(chasis_pos);
-    parts[0]->set_rotation_xyz(x_rotation, 0.0f, z_rotation);
-}
-
+float x_rotation = Vec3::Angle(forward, Vec3::up);
+float z_rotation = Vec3::Angle(right, Vec3::up);
+parts[0]->set_position(chasis_pos);
+parts[0]->set_rotation_xyz(x_rotation, 0.0f, z_rotation);
         </pre>
         <br>
         <br>
@@ -353,7 +302,10 @@ void CarEntity::UpdateChasisPosition(float delta_time) {
         <p>The depth buffer is used for both post-processing effects: in the first, to detect the edges of different
           objects (applying an outline, in this case black), and in the second, to blend between a blurred and a focused
           render, achieving the desired effect.
-        </p>
+        </p><br>
+                        <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/OGL_exp_2.mp4" type="video/mp4">
+          </video>
         <br>
         <h6>Outline:</h6>
         <pre>
@@ -450,64 +402,33 @@ void main() {
         </p>
         <br>
         <pre>
-void ParticleSystemCustom::init(const float spawn_rate, const float particle_max_life_time)
-{
-	if (is_initialized_) return;
-	is_initialized_ = true;
-
-	spawn_rate_ = spawn_rate;
-
-	int num_heights_ = 11;
-	int num_revs_ = 11;
-
-	dev::GPUManager::Instance()->newBuffer(&elements_buffer);
-	dev::GPUManager::Instance()->newBuffer(&order_buffer);
-	elements_buffer->init(num_particles_system_ * (num_heights_) * (num_revs_) * sizeof(MeshVTX));
-	order_buffer->init(num_particles_system_ * 600 * sizeof(int));
-
-	vertex.alloc(num_heights_ * num_revs_ * num_particles_system_);
-	vertex_updt.alloc(num_heights_ * num_revs_ * num_particles_system_);
-	float height_angle = 0.314159265f;
-	float revs_angle = 0.628318540f;
-	float radio;
-	Vec3 aux_vec3;
-	Vec2 aux_uv;
-
-	for (int rep = 0; rep < num_particles_system_; rep++) {
-		for (int i = 0; i < num_heights_; i++) {
-			radio = cos(height_angle * i - (3.14159265f * 0.5f));
-			aux_vec3.y = sin(height_angle * i - (3.14159265f * 0.5f));
-			aux_uv.y = (0.1f) * i;
-			for (int j = 0; j < num_revs_; j++) {
-				aux_vec3.x = radio * cos(revs_angle * j);
-				aux_vec3.z = radio * sin(revs_angle * j);
-				vertex[j + (i * num_revs_) + (rep * 121)].points.x = aux_vec3.x;
-				...
-				vertex_updt[j + (i * num_revs_) + (rep * 121)].uv = aux_uv;
-			}
+for (int rep = 0; rep < num_particles_system_; rep++) {
+	for (int i = 0; i < num_heights_; i++) {
+		radio = cos(height_angle * i - (3.14159265f * 0.5f));
+		aux_vec3.y = sin(height_angle * i - (3.14159265f * 0.5f));
+		aux_uv.y = (0.1f) * i;
+		for (int j = 0; j < num_revs_; j++) {
+			aux_vec3.x = radio * cos(revs_angle * j);
+			aux_vec3.z = radio * sin(revs_angle * j);
+			vertex[j + (i * num_revs_) + (rep * 121)].points.x = aux_vec3.x;
+			...
+			vertex_updt[j + (i * num_revs_) + (rep * 121)].uv = aux_uv;
 		}
 	}
-	
-	scoped_array<int> indexes;
-	indexes.alloc(600 * num_particles_system_);
+}
 
-	for (int rep = 0; rep < num_particles_system_; rep++) {
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				int ind_aux = (i * num_revs_ + j) + (rep * 121);
+scoped_array<int> indexes;
+indexes.alloc(600 * num_particles_system_);
 
-				indexes[((j + (i * 10)) * 6) + (rep * 600)] = ind_aux;
-				...
-				indexes[(((j + (i * 10)) * 6) + 5) + (rep * 600)] = ind_aux + 1;
-			}
+for (int rep = 0; rep < num_particles_system_; rep++) {
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			int ind_aux = (i * num_revs_ + j) + (rep * 121);
+			indexes[((j + (i * 10)) * 6) + (rep * 600)] = ind_aux;
+			...
+			indexes[(((j + (i * 10)) * 6) + 5) + (rep * 600)] = ind_aux + 1;
 		}
 	}
-
-	elements_buffer->uploadData(&vertex[0].points.x, sizeof(MeshVTX) * (num_heights_) * (num_revs_) *num_particles_system_);
-	order_buffer->uploadData(&indexes[0], num_particles_system_ * 600 * sizeof(int));
-	num_particles_system_ = 100;
-	particles_.alloc(100);
-	particle_max_life_time_ = particle_max_life_time;
 }
         </pre>
         <br>
@@ -519,66 +440,6 @@ void ParticleSystemCustom::init(const float spawn_rate, const float particle_max
           sizing each particle in 3D space. Particles that exceed their maximum lifetime are deactivated for future
           reuse. The transformed vertex data for active particles is then uploaded to the GPU for rendering.
         </p>
-        <br>
-        <pre>
-void ParticleSystemCustom::update(const double delta, const Vec3& spawner_position)
-{
-	
-	
-	if (is_emiting) {
-		time_to_spawn_counter_ += (float)delta;
-		if (time_to_spawn_counter_ > spawn_rate_ && num_particles_to_render_ < num_particles_system_) {
-
-			int i = 0;
-			while (i < num_particles_system_) {
-				if (!particles_[i].is_active) {
-					particles_[i].is_active = true;
-					particles_[i].current_life_time = 0;
-					particles_[i].position = spawner_position;
-					particles_[i].velocity.z = -((float)(rand()) / (float)(RAND_MAX));
-					particles_[i].velocity.y = 0.5f * (float)(rand()) / (float)(RAND_MAX);
-					num_particles_to_render_++;
-					time_to_spawn_counter_ = 0;
-					i = num_particles_system_ + 1;
-				}
-				i++;
-			}
-		}
-	}
-	
-	// Process all particles
-	
-	int particles_act = 0;
-	Mat4 mat4_aux; //= Mat4::Identity();
-	for (int j = 0; j < num_particles_system_; j++) {
-		if (particles_[j].is_active) {
-			particles_[j].current_life_time += delta;
-			if (particles_[j].current_life_time < particle_max_life_time_) {
-				particles_[j].position += (particles_[j].velocity * (float)delta);
-				float scale_ = MathUtils::Lerp(0.15f, 0.0f, (float)(particles_[j].current_life_time) / particle_max_life_time_);
-	
-				mat4_aux = Mat4::Translate(particles_[j].position);
-				mat4_aux = mat4_aux.Multiply(Mat4::Scale(scale_, scale_, scale_));
-				for (int k = 0; k < 11; k++) {
-					for (int l = 0; l < 11; l++) {
-						Vec3 aux = mat4_aux.TransformVec3(vertex[l + (k * 11) + (particles_act * 121)].points);
-						vertex_updt[l + (k * 11) + (particles_act * 121)].points.x = aux.x;//aux_vec3.x;// * sphere_size;
-						vertex_updt[l + (k * 11) + (particles_act * 121)].points.y = aux.y;//aux_vec3.y;
-						vertex_updt[l + (k * 11) + (particles_act * 121)].points.z = aux.z;//aux_vec3.z;// *sphere_size;
-					}
-				}
-				particles_act++;
-			}
-			else {
-				particles_[j].is_active = false;
-				num_particles_to_render_--;
-			}
-		}
-	}
-	
-	elements_buffer->uploadData(&vertex_updt[0].points.x, sizeof(MeshVTX) * (11) * (11)* num_particles_to_render_);
-}
-        </pre>
         <br>
       </div>
 
