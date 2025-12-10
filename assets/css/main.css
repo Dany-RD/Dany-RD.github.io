@@ -12,29 +12,41 @@
 --------------------------------------------------------------*/
 /* Fonts */
 :root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Raleway",  sans-serif;
-  --nav-font: "Poppins",  sans-serif;
+  --default-font: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "Raleway", sans-serif;
+  --nav-font: "Poppins", sans-serif;
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-:root { 
-  --background-color: #000000; /* Background color for the entire website, including individual sections */
-  --default-color: #fafafa; /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #ffffff; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #18d26e; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
-  --surface-color: #1a1a1a; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
-  --contrast-color: #000000; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
+:root {
+  --background-color: #000000;
+  /* Background color for the entire website, including individual sections */
+  --default-color: #fafafa;
+  /* Default color used for the majority of the text content across the entire website */
+  --heading-color: #ffffff;
+  /* Color for headings, subheadings and title throughout the website */
+  --accent-color: #18d26e;
+  /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --surface-color: #1a1a1a;
+  /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
+  --contrast-color: #000000;
+  /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
-  --nav-color: #fafafa;  /* The default color of the main navmenu links */
-  --nav-hover-color: #18d26e; /* Applied to main navmenu links when they are hovered over or active */
-  --nav-mobile-background-color: #1a1a1a; /* Used as the background color for mobile navigation menu */
-  --nav-dropdown-background-color: #1a1a1a; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #fafafa; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #18d26e; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-color: #fafafa;
+  /* The default color of the main navmenu links */
+  --nav-hover-color: #18d26e;
+  /* Applied to main navmenu links when they are hovered over or active */
+  --nav-mobile-background-color: #1a1a1a;
+  /* Used as the background color for mobile navigation menu */
+  --nav-dropdown-background-color: #1a1a1a;
+  /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
+  --nav-dropdown-color: #fafafa;
+  /* Used for navigation links of the dropdown items in the navigation menu. */
+  --nav-dropdown-hover-color: #18d26e;
+  /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -75,6 +87,13 @@ a {
 a:hover {
   color: color-mix(in srgb, var(--accent-color), transparent 25%);
   text-decoration: none;
+}
+
+pre {
+  background-color: var(--surface-color);
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
 }
 
 h1,
@@ -1232,16 +1251,20 @@ section,
 --------------------------------------------------------------*/
 .image-link {
   display: inline-block;
-  text-decoration: none; /* Removes underline */
+  text-decoration: none;
+  /* Removes underline */
 }
 
 .image-link img {
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover effect on image */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Hover effect on image */
 }
 
 .image-link:hover img {
-  transform: scale(1.05); /* Slight zoom effect on hover */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow */
+  transform: scale(1.05);
+  /* Slight zoom effect on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* Optional shadow */
 }
 
 /* Portfolio Filters */
@@ -1281,7 +1304,8 @@ section,
 .portfolio .portfolio-content {
   position: relative;
   overflow: hidden;
-  cursor: pointer; /* Cursor indicates clickability */
+  cursor: pointer;
+  /* Cursor indicates clickability */
 }
 
 .portfolio .portfolio-content img {
@@ -1289,7 +1313,8 @@ section,
 }
 
 .portfolio .portfolio-content:hover img {
-  transform: scale(1.1); /* Zoom effect on hover */
+  transform: scale(1.1);
+  /* Zoom effect on hover */
 }
 
 .portfolio .portfolio-content .portfolio-info {
@@ -1300,11 +1325,13 @@ section,
   transition: all ease-in-out 0.3s;
   background: rgba(0, 0, 0, 0.6);
   padding: 15px;
-  pointer-events: none; /* Prevent blocking clicks on the image link */
+  pointer-events: none;
+  /* Prevent blocking clicks on the image link */
 }
 
 .portfolio .portfolio-content:hover .portfolio-info {
-  opacity: 1; /* Show info on hover */
+  opacity: 1;
+  /* Show info on hover */
 }
 
 .portfolio .portfolio-content .portfolio-info h4 {
@@ -1337,7 +1364,8 @@ section,
   color: #fff;
   transition: 0.3s;
   line-height: 1.2;
-  pointer-events: auto; /* Allow clicks on buttons inside the info box */
+  pointer-events: auto;
+  /* Allow clicks on buttons inside the info box */
 }
 
 .portfolio .portfolio-content .portfolio-info .preview-link:hover,
