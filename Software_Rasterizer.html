@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Software Rasterizer</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Personal
+  * Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
+  * Updated: Nov 04 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="portfolio-details-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="resume.html">Resume</a></li>
+          <li><a href="portfolio.html" class="active">Portfolio</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Software Rasterizer</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-8">
+            <div class="portfolio-details-slider swiper init-swiper">
+
+              <script type="application/json" class="swiper-config">
+                {
+                  "loop": true,
+                  "speed": 600,
+                  "autoplay": {
+                    "delay": 5000
+                  },
+                  "slidesPerView": "auto",
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "type": "bullets",
+                    "clickable": true
+                  }
+                }
+              </script>
+
+              <div class="swiper-wrapper align-items-center">
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/rast_0.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/rast_1.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/rast_2.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/rast_3.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/rast_4.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/rast_5.png" alt="">
+                </div>
+
+              </div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
+              <h3>Project information</h3>
+              <ul>
+                <li><strong>Topic</strong>: Graphic Programming</li>
+                <li><strong>API</strong>: SDL(Linux)</li>
+                <li><strong>Project date</strong>: 2025</li>
+                <li><strong>Academic Project</strong></li>
+              </ul>
+            </div>
+            <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
+              <h2>About the Project</h2>
+              <p>
+                A fully CPU-based triangle rasterizer, developed using the SDL library on Linux. This implementation
+                helps me improve my understanding of a fundamental graphics process such as rasterization; obviously
+                this is a simplified version, but I have tried to optimize it using some interesting techniques.
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <br>
+        <h1>Main Function:</h1>
+        <br>
+        <pre>
+static int DrawTri(unsigned int* pixels, Point2D* points, int pitch, float normal_facin){
+
+    float cross = (points[1].x - points[0].x) * (points[2].y - points[0].y) -
+                  (points[1].y - points[0].y) * (points[2].x - points[0].x);
+
+    if (cross < 0) return 0;
+
+    int color = lerp(80, 255, -normal_facin);
+    float init_x;
+    float end_x;
+    int n_pixels = 0;
+
+    int top = 0, mid = 1, bot = 2;
+
+    if (points[bot].y < points[top].y) {
+        int tmp = top; top = bot; bot = tmp;
+    }
+    if (points[mid].y < points[top].y) {
+        int tmp = top; top = mid; mid = tmp;
+    }
+    if (points[bot].y < points[mid].y) {
+        int tmp = mid; mid = bot; bot = tmp;
+    }
+
+    Point2D* upper_point = &points[top];
+    Point2D* third_point = &points[mid];
+    Point2D* lower_point = &points[bot];
+
+    float upp_to_low = ((float)(lower_point->x - upper_point->x)) / ((float)(lower_point->y - upper_point->y));
+    
+    if(upper_point->y != third_point->y){
+        float upp_to_third = ((float)(upper_point->x - third_point->x)) / ((float)(upper_point->y - third_point->y));
+
+        init_x = (float)upper_point->x;
+        end_x = (float)upper_point->x;
+
+        int is_left = (upp_to_third < upp_to_low);
+        float init_step = is_left ? upp_to_third : upp_to_low;
+        float end_step = is_left ? upp_to_low : upp_to_third;
+
+        unsigned int* p_startline = &pixels[upper_point->y * pitch];
+        unsigned int* end_y = p_startline + ((third_point->y - upper_point->y) * pitch);
+
+        while(p_startline < end_y){
+            unsigned int* p_line = p_startline + (int)init_x;
+            int l = (int)end_x - (int)init_x;
+            n_pixels += l;
+            while(l > 8){
+                p_line[0] = color;
+                p_line[1] = color;
+                p_line[2] = color;
+                p_line[3] = color;
+                p_line[4] = color;
+                p_line[5] = color;
+                p_line[6] = color;
+                p_line[7] = color;
+                l-=8;
+                p_line += 8;
+            }             
+            while(l > 0){
+                *p_line++ = color;
+                l--;
+            }
+            init_x += init_step;
+            end_x += end_step;
+            p_startline += pitch;
+        }
+
+    }
+
+    if(third_point->y != lower_point->y){
+        float third_to_low = ((float)(third_point->x - lower_point->x)) / ((float)(third_point->y - lower_point->y));
+    
+        int is_left = (third_to_low > upp_to_low);
+        float init_step = is_left ? third_to_low : upp_to_low;
+        float end_step = is_left ? upp_to_low : third_to_low;
+
+        float x_up_to_low = (float)upper_point->x + (upp_to_low * (float)(third_point->y - upper_point->y));
+        float init_x = is_left ? (float)third_point->x : x_up_to_low;
+        float end_x = is_left ? x_up_to_low : (float)third_point->x;
+
+        unsigned int* p_startline = &pixels[third_point->y * pitch];
+        unsigned int* end_y = p_startline + ((lower_point->y - third_point->y) * pitch);
+
+        while(p_startline < end_y){
+            unsigned int* p_line = p_startline + (int)init_x;
+            int l = (int)end_x - (int)init_x;
+            n_pixels += l;
+            while(l > 8){
+                p_line[0] = color;
+                p_line[1] = color;
+                p_line[2] = color;
+                p_line[3] = color;
+                p_line[4] = color;
+                p_line[5] = color;
+                p_line[6] = color;
+                p_line[7] = color;
+                l-=8;
+                p_line += 8;
+            }             
+            while(l > 0){
+                *p_line++ = color;
+                l--;
+            }
+            init_x += init_step;
+            end_x += end_step;
+            p_startline += pitch;
+        }
+
+    }
+    return n_pixels;
+}</pre>
+        <br>
+        <p>This function shows a couple of optimizations, such as:
+        </p>
+        <h4>Backface Culling:</h4>
+        <p>Backface culling is a crucial optimization that discards invisible polygons, those facing away from the 
+          camera, to improve rendering speed. In this case, it is computed using a simple cross product of the lines 
+          from vertex 0 to 1 and from 0 to 2. If the result is less than zero, it means that the vertices are not in 
+          the required order.
+        </p>
+        <pre>
+float cross = (points[1].x - points[0].x) * (points[2].y - points[0].y) -
+              (points[1].y - points[0].y) * (points[2].x - points[0].x);
+
+if (cross < 0) return 0;</pre>
+        <br>
+        <h4>Manual Unroll:</h4>
+        <p>Loop unrolling is a common technique for optimizing large loops. It is based on eliminating the increment 
+          and condition check on each iteration. Obviously, it is more useful when the loop body is so simple that these 
+          operations represent a significant proportional cost, as is my case since it is just a simple assignment. The 
+          compiler may perform this automatically at -O3 or by enabling a specific compilation flag, but by implementing 
+          it manually I have more control and complete certainty about how this critical section is executed.
+        </p>
+        <pre>
+while(l > 8){
+    p_line[0] = color;
+    p_line[1] = color;
+    p_line[2] = color;
+    p_line[3] = color;
+    p_line[4] = color;
+    p_line[5] = color;
+    p_line[6] = color;
+    p_line[7] = color;
+    l-=8;
+    p_line += 8;
+}             
+while(l > 0){
+    *p_line++ = color;
+    l--;
+}</pre>
+      </div>
+
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

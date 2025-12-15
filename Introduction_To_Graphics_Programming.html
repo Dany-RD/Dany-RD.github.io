@@ -51,8 +51,8 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="resume.html">Resume</a></li>
-          <li><a href="portfolio.html">Portfolio</a></li>
-          <li><a href="contact.html" class="active">Contact</a></li>
+          <li><a href="portfolio.html" class="active">Portfolio</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -191,8 +191,7 @@ UpdateVegetations(vegetation_entities[0].get(), new_pos);
 
 new_pos.y = last_center.y + terrain_size_;
 thread_system_->AddTask(std::bind(ReuploadVertexTerrain, terrains[6].get(), terrain_drawable[6].get(), height_mult_, quad_size_, new_pos, noise_size_));
-UpdateVegetations(vegetation_entities[6].get(), new_pos);
-        </pre>
+UpdateVegetations(vegetation_entities[6].get(), new_pos);</pre>
         <br>
         <p>Then they are uploaded to the GPU, and a swap is performed in the array to always keep track of the positions
           each one occupies.
@@ -210,8 +209,7 @@ terrains[3].swap(terrains[4]);
 terrains[4].swap(terrains[5]);
 
 terrains[6].swap(terrains[7]);
-terrains[7].swap(terrains[8]);
-        </pre>
+terrains[7].swap(terrains[8]);</pre>
         <br>
         <br>
         <br>
@@ -245,8 +243,7 @@ else {
 }
 float new_car_pos[3];
 new_car_pos = ...;
-car_parent->set_position(new_car_pos);
-        </pre>
+car_parent->set_position(new_car_pos);</pre>
         <br>
         <p>Then, to simulate movement over an uneven surface, the same noise applied to the terrain is used to calculate
           the vehicle's position and tilt.
@@ -293,8 +290,7 @@ right = righ_side - left_side;
 float x_rotation = Vec3::Angle(forward, Vec3::up);
 float z_rotation = Vec3::Angle(right, Vec3::up);
 parts[0]->set_position(chasis_pos);
-parts[0]->set_rotation_xyz(x_rotation, 0.0f, z_rotation);
-        </pre>
+parts[0]->set_rotation_xyz(x_rotation, 0.0f, z_rotation);</pre>
         <br>
         <br>
         <br>
@@ -355,8 +351,7 @@ void main() {
 
   fragColor.rgb = mix(color.rgb, lineColor, diff);
   fragColor.a   = 1.0;
-}
-        </pre>
+}</pre>
         <br>
         <h6>DOF:</h6>
         <pre>
@@ -381,8 +376,7 @@ void main() {
       );
 
   frag_color  = mix(focus_color, out_of_focus_color, blur);
-}
-        </pre>
+}</pre>
         <br>
         <br>
         <br>
@@ -429,8 +423,7 @@ for (int rep = 0; rep < num_particles_system_; rep++) {
 			indexes[(((j + (i * 10)) * 6) + 5) + (rep * 600)] = ind_aux + 1;
 		}
 	}
-}
-        </pre>
+}</pre>
         <br>
         <p>Then the update() function handles the particle lifecycle each frame. It spawns new particles at regular
           intervals when emission is active, placing them at the spawner's position with random velocities. For each
