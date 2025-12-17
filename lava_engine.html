@@ -122,77 +122,426 @@
                 <li><strong>API</strong>: Vulkan</li>
                 <li><strong>Project date</strong>: 2025</li>
                 <li><strong>Video</strong>: <a href="https://youtu.be/aMlu4eaePbY?si=Dnxt8oG2xF6bLuOY"> Link </a></li>
+                <li><strong>Partner</strong>: <a href="https://www.linkedin.com/in/carlos-garc%C3%ADa-roig-8a1536192/">
+                    Carlos García Roig </a></li>
                 <li><strong>Academic Project</strong></li>
               </ul>
             </div>
             <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
               <h2>About the Project</h2>
               <p>
-                Enter the darkness. Fight for his soul.
-                <br>
-                In a world ravaged by the Emerald Plague, death is not the end... it's only the beginning of corruption.
-                In Tiris, you embody Liria, an alchemist and sorceress determined to defy death itself to save her
-                beloved Narcis, turned into an abomination
-                in the service of a dark Necromancer.
+                Lava Engine is a modern 3D graphics engine implemented in C++ that leverages Vulkan as
+                its primary graphics API. The engine is designed with a modular and extensible architecture
+                that supports both traditional desktop rendering and virtual reality applications through
+                OpenXR integration.
               </p>
             </div>
           </div>
 
         </div>
-        This academic project was developed by a complete team of programmers, artists, and designers. My main role was
-        to provide support and help my teammates, in addition to implementing some features. Since it was a fairly
-        limited project, the
-        workload was not as high as in some of my previous projects.
+        <p><br>Before starting, I must thank my teammate <a
+            href="https://www.linkedin.com/in/carlos-garc%C3%ADa-roig-8a1536192/">
+            Carlos García Roig </a>, without whom this project would have been
+          impossible to complete. Thanks brother!
+          <br><br>LavaEngine uses multiple techniques and algorithms to provide all its functionalities. The
+          following
+          sections
+          will explain the most important ones created by me , with some code snippets when it is necessary.
+        </p>
+
+        <h1><b>Input System:</b></h1><br>
+        <p>
+          The Lava Engine implements a comprehensive input management system that provides
+          unified access to keyboard, mouse, and gamepad inputs through a sophisticated
+          action-binding architecture. The system is designed to handle multiple input devices
+          seamlessly while maintaining frame-accurate state tracking and supporting complex input
+          scenarios such as multiple windows and gamepad hotplugging.
+          <br><br>
+          The input system follows a modern game engine architecture where raw hardware inputs are
+          abstracted into logical actions, allowing developers to define gameplay mechanics
+          independently of specific input devices. This approach enables flexible control schemes and
+          simplified input handling across different platforms and hardware configurations.
+        </p>
         <br>
+        <h4><b>Architecture and Design Philosophy:</b></h4>
+        <p>
+          The <span style="color: rgb(66, 147, 109);"><b>LavaInput</b></span> class serves as the central hub for all
+          input
+          processing, implementing a
+          singleton-like pattern where each GLFW window maintains its own input instance. The
+          system uses static callback management to route GLFW events to the appropriate input
+          instance, ensuring proper isolation between multiple windows while maintaining efficient
+          callback handling.
+          <br><br>
+          The core design revolves around three fundamental concepts:
+        </p>
+        <ul>
+          <li><b>Raw Input Processing:</b> Direct handling of keyboard, mouse, and gamepad events
+            with frame-accurate state tracking.
+          </li>
+          <li><b>Action Binding System:</b> Mapping of raw inputs to logical actions that can be queried
+            by game code.
+          </li>
+          <li><b>Frame-Synchronized Updates:</b> Consistent input state management aligned with the
+            engine's frame lifecycle.</li>
+        </ul>
         <br>
-        <h1>Most Important Implementations</h1>
+        <h4><b>Multi-Device Input Support:</b></h4>
+        <p>
+          The input system provides comprehensive support for three primary input device categories,
+          each with specialized handling optimized for their unique characteristics.
+        </p>
+        <h5>Keyboard and Mouse Integration:</h5>
+        <p>
+          Keyboard and mouse inputs are processed through GLFW's callback system, with events
+          immediately captured and stored for frame-synchronized processing. The system maintains
+          detailed state information including: </p>
+        <ul>
+          <li><b>Press Detection:</b> First-frame detection when a key transitions from up to down.</li>
+          <li><b>Release Detection:</b> First-frame detection when a key transitions from down to up.</li>
+          <li><b>Repeat Handling:</b> Continuous key repeat events for sustained input.</li>
+          <li><b>State Persistence:</b> Multi-frame state tracking for hold detection</li>
+        </ul>
+        <br>
+        <p>The keyboard implementation uses a property-based system where each key maintains
+          current and previous frame states, enabling accurate detection of state transitions:</p>
+        <pre>struct KeyProperties {
+  int32_t current_frame_properties;
+  int32_t past_frame_properties;
+  double last_action_time;
+};</pre>
+        <p>Mouse input receives identical treatment to keyboard input, with additional specialized
+          handling for cursor position tracking and scroll wheel events. The system maintains smooth
+          cursor position updates and provides frame-accurate scroll offset information that
+          automatically resets each frame.
+        </p>
+        <h5>Gamepad Support and Hot-Plugging:</h5>
+        <p>The gamepad system implements sophisticated state management that handles up to
+          multiple simultaneous controllers with full hot-plugging support. Each gamepad maintains its
+          own state wrapper that includes:</p>
+        <ul>
+          <li><b>Button State Tracking:</b> Individual button state management with
+            press/release/repeat detection.</li>
+          <li><b>Analog Axis Values:</b> Continuous axis value tracking with proper normalization.</li>
+          <li><b>Connection Status:</b> Dynamic detection of gamepad connection and disconnection.</li>
+          <li><b>State Persistence:</b> Frame-to-frame state comparison for accurate event detection</li>
+        </ul>
+        <p>The gamepad processing occurs during the end-of-frame update cycle, where the system
+          polls all potential gamepad slots and updates their respective states:
+        </p>
+        <pre>struct GamepadState {
+  GLFWgamepadstate state;
+  bool is_active;
+};</pre>
+        <br>
+        <h4><b>Action Binding Architecture:</b></h4>
+        <p>The action binding system represents one of the most sophisticated aspects of the input
+          implementation, providing a flexible mapping layer between raw inputs and gameplay
+          actions. This system allows developers to define logical actions (such as "Jump", "Fire", or
+          "Move Forward") and bind them to arbitrary combinations of input devices.
+        </p>
+        <h5>Flexible Binding System:</h5>
+        <p>Actions can be bound to multiple inputs simultaneously, creating redundant input methods
+          that enhance accessibility and user preference accommodation. The system supports:
+        </p>
+        <ul>
+          <li><b>Multiple Key Bindings:</b> Single actions can respond to multiple keyboard keys or
+            mouse buttons.</li>
+          <li><b>Gamepad Integration:</b> Actions can bind to gamepad buttons across multiple
+            controllers.</li>
+          <li><b>Mixed Device Binding:</b> Single actions can respond to inputs from any combination
+            of keyboard, mouse, and gamepad.</li>
+          <li><b>Axis Mapping:</b> Analog gamepad axes can be bound to actions for continuous input
+            values.</li>
+        </ul>
+        <p>The binding system uses efficient container structures to minimize lookup overhead during
+          runtime queries:
+        </p>
+        <pre>&ltstd::map&ltint, std::set&ltint>> kb_mouse_action_map_;
+&ltstd::map&ltint, std::vector&ltGamePadAction>> gamepad_action_map_;
+&ltstd::map&ltint, GamePadAction> gamepad_axis_action_map_;</pre>
+        <h5>Action Query Interface:</h5>
+        <p>The action system provides a consistent query interface regardless of the underlying input
+          devices bound to each action. Developers can query actions using familiar input paradigms:
+        </p>
+        <ul>
+          <li><b><span style="color: rgb(71, 101, 202);">isActionPressed()</span>:</b> Detects the first frame an action
+            becomes active.</li>
+          <li><b><span style="color: rgb(71, 101, 202);">isActionReleased()</span>:</b> Detects the first frame an
+            action
+            becomes inactive.</li>
+          <li><b><span style="color: rgb(71, 101, 202);">isActionDown()</span>:</b> Checks if an action is currently
+            active.
+          </li>
+          <li><b><span style="color: rgb(71, 101, 202);">isActionUp()</span>:</b> Checks if an action is currently
+            inactive.
+          </li>
+          <li><b><span style="color: rgb(71, 101, 202);">getActionAxis()</span>:</b> Retrieves continuous analog values
+            for
+            axis-bound actions.</li>
+        </ul>
+        <h4><b>Frame-Synchronized Processing:</b></h4>
+        <p>The input system implements a sophisticated frame synchronization mechanism that
+          ensures consistent input state across the entire engine. This system addresses the
+          fundamental challenge that input events occur asynchronously while game logic requires
+          consistent, frame-aligned input states.
+        </p>
+        <h5>End-of-Frame Processing:</h5>
+        <p>All input state transitions are processed during a dedicated end-of-frame phase that occurs
+          after all game logic has completed but before the next frame begins. This processing
+          includes:
+        </p>
+        <ul>
+          <li><b>State Transition Management:</b> Moving current frame properties to previous frame
+            storage.</li>
+          <li><b>Repeat State Handling:</b>Converting press events to repeat states for sustained input.</li>
+          <li><b>Gamepad Polling:</b>Active polling of all gamepad states with connection detection.</li>
+          <li><b>Cleanup Operations:</b> Resetting transient states like scroll offsets.</li>
+        </ul>
+        <p>The frame processing system uses a property-based approach where input states are
+          represented as bit flags, enabling efficient state queries and transitions:
+        </p>
+        <pre>#define KEY_PRESS 0x0001
+#define KEY_RELEASE 0x0002
+#define KEY_REPEAT 0x0004
+#define SUSTAIN_TIL_RELEASE 0x0008</pre>
+        <h5>Multi-Window Management:</h5>
+        <p>The system maintains a static mapping of GLFW windows to their respective input
+          instances, enabling proper input isolation in multi-window applications. Each window
+          receives its own input context while sharing the frame synchronization system to maintain
+          consistent timing across all windows.</p><br>
+        <h4><b>Event-Driven Callback System:</b></h4>
+        <p>The input system implements a robust callback architecture that efficiently routes GLFW
+          input events to the appropriate input instances. This system uses static callback functions
+          that dispatch to instance methods, providing the necessary bridge between C-style GLFW
+          callbacks and C++ object-oriented design.
+        </p>
+        <h5>Callback Registration and Management:</h5>
+        <p>During initialization, the system registers comprehensive GLFW callbacks for all supported
+          input types:
+        </p>
+        <ul>
+          <li><b>Key Callbacks:</b> Keyboard input event handling.</li>
+          <li><b>Mouse Button Callbacks:</b> Mouse click and release event handling.</li>
+          <li><b>Cursor Position Callbacks:</b> Mouse movement tracking.</li>
+          <li><b>Scroll Callbacks:</b> Mouse wheel input processing.</li>
+          <li><b>Window Close Callbacks:</b> Cleanup handling for window destruction.</li>
+        </ul>
+        <p>The callback system maintains proper resource management through RAII principles,
+          automatically cleaning up callback registrations during object destruction to prevent dangling
+          pointers and callback-related crashes.</p><br>
+        <h4><b>Performance Characteristics:</b></h4>
+        <p>The input system is optimized for minimal runtime overhead while maintaining
+          comprehensive feature support:</p>
+        <ul>
+          <li><b>Efficient Lookups:</b> Hash-based key mapping for O(1) input state queries.</li>
+          <li><b>Minimal Allocations:</b> Static container sizing and reuse to minimize memory churn.</li>
+          <li><b>Callback Optimization:</b> Direct callback routing without virtual function overhead.</li>
+          <li><b>State Caching:</b> Frame-to-frame state caching to minimize redundant processing.</li>
+        </ul>
+        <p>This comprehensive input system provides the foundation for responsive, flexible input
+          handling that can accommodate diverse gameplay requirements while maintaining the
+          performance characteristics necessary for real-time graphics applications.
+        </p>
         <br>
 
-        <h4>Player Movement:</h4>
-        <p>
-          This game is a twin-stick shooter, which implies a separation between the direction the character is facing
-          and the direction of movement. Supported by Unreal Engine 5's Motion Matching system, I achieved a
-          satisfactory control scheme that
-          serves as the foundation of the game, applying inertia-based leaning during sharp direction changes while
-          still providing a fast response to player input.
-        </p>
-        <video autoplay loop muted playsinline style="width: 70%; height: auto; transform: translateX(15%);"
-          preload="auto">
-          <source src="assets/img/portfolio/Explanations/Tiris_0.mp4" type="video/mp4">
-        </video>
-        <br><br>
-        <p>
-          Additionally, the game features a climbing system that allows the protagonist to scale elevations and overcome
-          obstacles.
-        </p>
-        <video autoplay loop muted playsinline style="width: 70%; height: auto; transform: translateX(15%);"
-          preload="auto">
-          <source src="assets/img/portfolio/Explanations/Tiris_1.mp4" type="video/mp4">
-        </video>
+        <!-------------------------------------------------------------------------------->
 
-        <br>
-        <br>
-        <h4>Interactables:</h4>
+        <h1><b>Job System:</b></h1><br>
         <p>
-          To enable the design of interesting puzzles, I was asked to implement a system of interactable and activatable
-          objects. For example, as shown in the following
-          video, when interacting with (shooting) the altar, the door is activated and proceeds to open:
-        </p>
-        <video autoplay loop muted playsinline style="width: 70%; height: auto; transform: translateX(15%);"
-          preload="auto">
-          <source src="assets/img/portfolio/Explanations/Tiris_2.mp4" type="video/mp4">
-        </video>
+          The Lava Engine implements a high-performance, thread-safe job system designed to
+          efficiently distribute computational workloads across multiple CPU cores. This system
+          provides a foundation for parallel processing throughout the engine, enabling sophisticated
+          multi-threading capabilities while maintaining simplicity and safety in concurrent
+          programming patterns.
+          <br><br>
+          The job system follows modern C++ concurrency principles, utilizing move semantics,
+          perfect forwarding, and future-based task management to deliver optimal performance with
+          minimal overhead. The implementation abstracts the complexities of thread management
+          and synchronization, providing a clean interface for submitting arbitrary work units that can
+          be executed asynchronously across available hardware threads.
+        </p><br>
+        <h4><b>Architecture and Threading Model:</b></h4>
         <p>
-          One of the branches of this system can also be seen in the various interactables on the map that provide
-          information and world lore, using altars when approaching
-          and pressing the corresponding key.
+          The <span style="color: rgb(66, 147, 109);">LavaJobSystem</span> implements a worker thread pool architecture
+          that automatically
+          scales to match the available hardware concurrency. Upon initialization, the system queries
+          <span style="color: rgb(71, 101, 202);">std::thread::hardware_concurrency()</span> to determine the optimal
+          number of worker
+          threads, creating a thread pool that maximizes CPU utilization without over-subscription
+          <br><br>
+          The threading model follows a producer-consumer pattern where the main thread (and other
+          threads) act as producers by submitting tasks, while a fixed pool of worker threads consume
+          and execute these tasks. This approach provides several key advantages:
         </p>
-        <video autoplay loop muted playsinline style="width: 70%; height: auto; transform: translateX(15%);"
-          preload="auto">
-          <source src="assets/img/portfolio/Explanations/Tiris_3.mp4" type="video/mp4">
-        </video>
+        <ul>
+          <li><b>Automatic Load Balancing:</b> Work is distributed dynamically across available
+            threads.</li>
+          <li><b>Thread Reuse:</b> Eliminates the overhead of frequent thread creation and destruction.</li>
+          <li><b>Hardware Optimization:</b> Thread count automatically matches CPU core availability.</li>
+          <li><b>Scalable Performance:</b> Performance scales linearly with available hardware threads.</li>
+        </ul>
+        <h4><b>Task Queue and Synchronization:</b></h4>
+        <p>
+          The core of the job system revolves around a thread-safe task queue implemented using
+          <span style="color: rgb(71, 101, 202);">std::queue&ltstd::move_only_function&ltvoid()>></span>. This design
+          choice provides
+          several important benefits:
+        </p>
+        <ul>
+          <li><b>Move-Only Semantics:</b> Tasks are moved rather than copied, eliminating
+            unnecessary overhead for capturing large objects.</li>
+          <li><b>Type Erasure:</b> The system can accept any callable object that matches the signature.</li>
+          <li><b>Memory Efficiency:</b> Move semantics prevent expensive copying of captured
+            variables.</li>
+          <li><b>Exception Safety:</b> RAII principles ensure proper cleanup even in exception
+            scenarios.</li>
+        </ul>
+        <p>
+          The synchronization mechanism uses a combination of <span style="color: rgb(71, 101, 202);">std::mutex</span>
+          and <span style="color: rgb(71, 101, 202);">std::condition_variable</span> to provide efficient thread
+          coordination:
+        </p>
+        <pre>std::mutex lock_;
+std::condition_variable condition_var_;
+std::queue&ltstd::move_only_function&ltvoid()>> tasks_;</pre>
+        <p>
+          This combination enables worker threads to sleep when no work is available and wake
+          immediately when new tasks arrive, minimizing CPU usage during idle periods while
+          maintaining responsive task execution.
+        </p>
+        <h4><b>Advanced Task Submission Interface:</b></h4>
+        <p>
+          The job system provides two distinct interfaces for task submission, each optimized for
+          different use cases and requirements.
+        </p>
+        <h5>Simple Task Submission:</h5>
+        <p>
+          The <span style="color: rgb(71, 101, 202);">add_task()</span> method provides a straightforward interface for
+          fire-and-forget task
+          execution. This method accepts any callable object that can be converted to
+          <span style="color: rgb(71, 101, 202);">std::move_only_function&ltvoid()></span>, including:
+        </p>
+        <ul>
+          <li>Lambda expressions with captures.</li>
+          <li>Function pointers.</li>
+          <li>Callable objects and functors.</li>
+          <li>Member function bindings.</li>
+        </ul>
+        <p>Tasks submitted through this interface execute asynchronously without providing return
+          value access or completion notification.</p>
+        <h5>Future-Based Task Submission:</h5>
+        <p>The templated <span style="color: rgb(71, 101, 202);">add()</span> method implements a sophisticated
+          future-based task submission
+          system that provides return value access and completion tracking:</p>
+        <pre>template&lttypename T>
+typename std::future&ltstd::invoke_result_t&ltT>> add(T&& f) {
+  typedef typename std::invoke_result_t&ltT> result;
+  std::packaged_task&ltresult()> task(std::move(f));
+  auto future = task.get_future();
+  add_task(std::move(task));
+  return future;
+}</pre>
+        <p>This implementation leverages several advanced C++ features:</p>
+        <ul>
+          <li><b> Perfect Forwarding:</b> Universal references preserve value categories andconst-correctness.</li>
+          <li><b>Type Deduction:</b> <span style="color: rgb(71, 101, 202);">std::invoke_result_t</span> automatically
+            deduces return types.</li>
+          <li><b>Packaged Tasks:</b> Provide the bridge between callable objects and futures.</li>
+          <li><b>Move Semantics:</b> Eliminate unnecessary copying throughout the submission
+            process.</li>
+        </ul>
+        <p>The future-based interface enables sophisticated coordination patterns, allowing calling code
+          to:</p>
+        <ul>
+          <li><b>Retrieve Return Values:</b> Access results from asynchronously executed tasks.</li>
+          <li><b>Synchronize Execution:</b> Wait for task completion using future synchronization
+            primitives.</li>
+          <li><b>Handle Exceptions:</b> Automatically propagate exceptions from worker threads to
+            calling threads.</li>
+          <li><b>Coordinate Dependencies:</b> Chain dependent operations using future continuations.</li>
+        </ul>
+        <h4><b>Thread-Safe Worker Implementation:</b></h4>
+        <p>
+          The worker thread implementation demonstrates careful attention to thread safety and
+          resource management. Each worker thread executes the run_tasks() method in a
+          continuous loop, efficiently processing available work while handling shutdown scenarios
+          gracefully.
+        </p>
+        <h5>Task Execution Loop:</h5>
+        <p>The worker loop implements a sophisticated wait-and-execute pattern:</p>
+        <pre>
+void LavaJobSystem::run_tasks() {
+  std::move_only_function&ltvoid()> task;
+  while (1) {
+    {
+      std::unique_lock&ltstd::mutex> unq_lock(lock_);
+      condition_var_.wait(unq_lock, [this] {
+        return !tasks_.empty() || shutdown_;
+      });
+      if (tasks_.empty()) return;
+      task = std::move(tasks_.front());
+      tasks_.pop();
+    }
+    task();
+  }
+}</pre>
+        <p>This implementation provides several important characteristics:</p>
+        <ul>
+          <li><b>Efficient Blocking:</b> Threads sleep when no work is available, minimizing CPU usage.</li>
+          <li><b>Spurious Wakeup Protection:</b> The predicate function ensures threads only proceed
+            when work is actually available.</li>
+          <li><b>Exception Safety:</b> Task extraction occurs within a locked scope, preventing race
+            conditions.</li>
+          <li><b>Clean Shutdown:</b> The shutdown flag enables graceful thread termination.</li>
+        </ul>
+        <h5>Resource Management and Cleanup:</h5>
+        <p>The job system implements comprehensive resource management following RAII principles.
+          The destructor ensures proper shutdown sequencing:</p>
+        <ul>
+          <li><b>Signal Shutdown:</b> Sets the shutdown flag while holding the mutex.</li>
+          <li><b>Wake All Threads:</b> Notifies all sleeping worker threads to check the shutdown
+            condition.</li>
+          <li><b>Thread Joining:</b> Waits for all worker threads to complete their current tasks and exit.</li>
+          <li><b>Resource Cleanup:</b> Automatic cleanup of remaining tasks and synchronization
+            primitives.</li>
+        </ul>
+        <p>This shutdown sequence prevents resource leaks and ensures that all worker threads
+          terminate cleanly before the job system is destroyed.</p><br>
+        <h4><b>Performance Characteristics and Optimization:</b></h4>
+        <p>The job system is designed for high-performance scenarios with several optimization
+          strategies:</p>
+        <h5>Lock Contention Minimization:</h5>
+        <p>The implementation minimizes lock contention through careful scope management:</p>
+        <ul>
+          <li><b>Minimal Critical Sections:</b> Locks are held only during queue manipulation
+            operations.</li>
+          <li><b>Move Operations:</b> Tasks are moved rather than copied, reducing time spent in
+            critical sections.</li>
+          <li><b>Condition Variable Efficiency:</b> Uses condition variables instead of busy-waiting for
+            optimal thread coordination.</li>
+        </ul>
+        <h5>Memory Efficiency:</h5>
+        <p>The system optimizes memory usage through several techniques:</p>
+        <ul>
+          <li><b>Move-Only Functions:</b> Eliminate unnecessary copying of captured variables</li>
+          <li><b>Thread Pool Reuse:</b> Avoid repeated thread creation/destruction overhead</li>
+          <li><b>Automatic Scaling:</b> Thread count matches hardware capabilities without
+            over-subscription</li>
+        </ul>
+        <h5>Cache Efficiency:</h5>
+        <p>The design considers CPU cache efficiency:</p>
+        <ul>
+          <li><b>Localized Data Access:</b> Each thread processes tasks independently, minimizing
+            cache conflicts</li>
+          <li><b>Sequential Task Processing:</b> Worker threads process tasks in submission order
+            when possible</li>
+          <li><b>Minimal Shared State:</b> Only the task queue requires synchronization between
+            threads</li>
+        </ul>
 
       </div>
+
 
     </section><!-- /Portfolio Details Section -->
 
