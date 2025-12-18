@@ -29,6 +29,25 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
+  <style>
+    .btn-primary {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+    .btn-primary:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+    }
+    .btn-outline-primary {
+      color: #28a745;
+      border-color: #28a745;
+    }
+    .btn-outline-primary:hover {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+  </style>
+
   <!-- =======================================================
   * Template Name: Personal
   * Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
@@ -121,7 +140,6 @@
                 <li><strong>Topic</strong>: Graphic Programming</li>
                 <li><strong>API</strong>: Vulkan</li>
                 <li><strong>Project date</strong>: 2025</li>
-                <li><strong>Video</strong>: <a href="https://youtu.be/aMlu4eaePbY?si=Dnxt8oG2xF6bLuOY"> Link </a></li>
                 <li><strong>Partner</strong>: <a href="https://www.linkedin.com/in/carlos-garc%C3%ADa-roig-8a1536192/">
                     Carlos García Roig </a></li>
                 <li><strong>Academic Project</strong></li>
@@ -149,6 +167,17 @@
           will explain the most important ones created by me , with some code snippets when it is necessary.
         </p>
 
+        <div class="d-flex justify-content-center my-4">
+          <div class="btn-group" role="group">
+            <button class="btn btn-primary" data-section="input-system">Input System</button>
+            <button class="btn btn-outline-primary" data-section="job-system">Job System</button>
+            <button class="btn btn-outline-primary" data-section="cascade-shadow-mapping">Cascade Shadow Mapping</button>
+            <button class="btn btn-outline-primary" data-section="pbr">PBR</button>
+            <button class="btn btn-outline-primary" data-section="gaussian-splatting">Gaussian Splatting</button>
+          </div>
+        </div>
+
+        <div id="input-system" class="section-content" style="display: block;">
         <h1><b>Input System:</b></h1><br>
         <p>
           The Lava Engine implements a comprehensive input management system that provides
@@ -345,8 +374,11 @@
         </p>
         <br>
 
+        </div>
+
         <!-------------------------------------------------------------------------------->
 
+        <div id="job-system" class="section-content" style="display: none;">
         <h1><b>Job System:</b></h1><br>
         <p>
           The Lava Engine implements a high-performance, thread-safe job system designed to
@@ -540,6 +572,773 @@ void LavaJobSystem::run_tasks() {
             threads</li>
         </ul>
 
+        </div>
+
+        <!-------------------------------------------------------------------------------->
+
+        <div id="gaussian-splatting" class="section-content" style="display: none;">
+        <h1><b>Gaussian Splatting:</b></h1><br>
+                        <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/lava_gauss_exp.mp4" type="video/mp4">
+        </video><br><br>
+        <p>
+          The Lava Engine implements a sophisticated Gaussian Splatting rendering system that
+          enables real-time visualization of point cloud data with photorealistic quality. This technique
+          represents a cutting-edge approach to neural rendering, where 3D scenes are represented
+          as collections of oriented 3D Gaussian primitives that can be efficiently rasterized to produce
+          high-quality images.
+          <br><br>
+          The implementation leverages the mathematical properties of Gaussian distributions, which
+          remain Gaussian under affine transformations, allowing for efficient projection from 3D world
+          space to 2D screen space while maintaining the fundamental shape characteristics needed
+          for accurate rendering.
+        </p><br>
+        <h4><b>PLY File Format Support:</b></h4>
+        <p>
+          The engine's Gaussian Splatting system begins with comprehensive PLY file format support
+          through the custom <span style="color: rgb(66, 147, 109);">LavaPly</span> parser. This parser handles binary PLY files containing
+          Gaussian splat data, which typically includes position coordinates, spherical harmonics
+          coefficients for view-dependent color, opacity values, rotation quaternions, and anisotropic
+          scaling parameters.
+          <br><br>
+          The PLY parser implements a flexible property system that can handle various data types
+          including 8-bit through 32-bit integers, floating-point values, and doubles. The parser
+          validates file headers, ensuring compatibility with binary little-endian format, and dynamically
+          constructs a property map that allows efficient access to vertex attributes during the loading
+          process.
+        </p>
+        <pre>// Example of property extraction during PLY parsing
+struct Props{
+  LavaPly::BinaryAttrib x, y, z;
+  LavaPly::BinaryAttrib f_dc[3]; // Spherical harmonics coefficients
+  LavaPly::BinaryAttrib opacity;
+  LavaPly::BinaryAttrib scale[3]; // Anisotropic scaling
+  LavaPly::BinaryAttrib rot[4]; // Rotation quaternion
+};</pre>
+<p>The property system uses templated read operations that handle proper memory alignment
+and type conversion, ensuring that data extracted from the binary PLY format matches the
+expected internal representation.
+</p><br>
+        <h4><b>Data Structure and Memory Layout:</b></h4>
+        <p>The core Gaussian data is organized in the GaussianData structure, which is carefully
+designed to align with GPU memory requirements and Vulkan's buffer layout specifications.
+Each Gaussian splat contains:</p>
+        <ul>
+          <li><b>Position and Alpha:</b> 4-component vector storing the 3D center position with opacity
+            in the w-component.</li>
+          <li><b>Spherical Harmonics Coefficients:</b> Separate 4-component vectors for red, green,
+            and blue channels, enabling view-dependent color computation.</li>
+          <li><b>3D Covariance Matrix:</b> Three 3-component vectors representing the columns of the
+            3x3 covariance matrix that defines the Gaussian's shape and orientation.</li>
+        </ul>
+                <p>3x3 covariance matrix that defines the Gaussian's shape and orientation
+The structure includes explicit padding to ensure proper alignment with Vulkan's std430
+layout requirements, preventing GPU access violations and maintaining consistent
+performance across different hardware configurations.
+</p>
+
+        <h4><b>Multi-Directional Pre-Sorting System:</b></h4>
+
+                        <p>One of the most sophisticated aspects of the implementation is the multi-directional
+pre-sorting system, which addresses the fundamental challenge that Gaussian splatting
+requires depth-sorted rendering for correct alpha blending. The system pre-computes 26
+different sorting orders corresponding to different viewing directions, arranged in a 3×3×3
+grid around the scene (excluding the center position).<br><br>
+The sorting process operates as follows:
+</p>
+        <ul>
+          <li><b>Reference Point Generation:</b> For each of the 26 directions, a reference viewing
+position is calculated at a distance beyond the furthest point in the dataset.</li>
+          <li><b>Distance Calculation:</b> Each Gaussian's distance to the reference point is computed
+using squared distance for efficiency.</li>
+          <li><b>Parallel Sorting:</b> The engine's job system performs parallel quicksort operations,
+with each direction handled as a separate task.</li>
+          <li><b>GPU Buffer Creation:</b> Each sorted index array is uploaded to a dedicated GPU buffer for runtime access.</li>
+        </ul>
+        <p>This approach enables real-time rendering without requiring expensive per-frame sorting
+operations, as the renderer can select the pre-computed index buffer that best matches the
+current viewing direction.</p>
+
+<pre>
+// Multi-directional sorting setup
+for (j = -1; j &lt 2; ++j) {
+  for (k = -1; k &lt 2; ++k) {
+    for (w = -1; w &lt 2; ++w) {
+      if (0 == j && 0 == k && 0 == w) continue;
+      glm::vec3 refPos = farLength * glm::vec3((float)j, (float)k, (float)w);
+      // Create and sort index buffer for this direction
+    }
+  }
+}
+</pre>
+
+        <h4><b>GPU Memory Management:</b></h4>
+
+        <p>The GPU upload process demonstrates sophisticated buffer management techniques. The
+        system creates both vertex buffers for storing Gaussian data and multiple index buffers for
+        the pre-sorted rendering orders. All buffers are allocated using the Vulkan Memory Allocator
+        (VMA) with GPU-only memory for optimal performance.<br><br>
+        The upload process uses a staging buffer approach, where CPU-accessible memory
+        temporarily holds all data before being transferred to GPU memory through Vulkan
+        command buffers. This ensures efficient memory usage while maintaining high transfer
+        speeds.
+        </p>
+
+        <h4><b>Shader Pipeline Implementation:</b></h4>
+        <p>
+        The rendering pipeline consists of three specialized shaders that work together to transform
+        3D Gaussian primitives into screen-space quads:</p>
+<h5>Vertex Shader Processing:</h5>
+        <p>
+          The vertex shader performs the complex mathematical transformation from 3D Gaussian
+          parameters to screen-space representation. Key operations include:</p>
+
+          <ul>
+          <li><b>Spherical Harmonics Evaluation:</b> View-dependent color computation using
+            spherical harmonics coefficients, providing realistic lighting variation based on
+            viewing angle.</li>
+          <li><b>3D to 2D Covariance Projection:</b> Mathematical transformation of the 3D covariance
+            matrix to 2D screen space using the Jacobian of the projection transformation.</li>
+          <li><b>Affine Transform Optimization:</b> Leveraging the property that Gaussians remain
+            Gaussian under affine transformations to simplify the projection mathematics.</li>
+        </ul>
+
+<p>The shader computes the Jacobian matrix that approximates the projection transformation,
+enabling efficient covariance matrix transformation without expensive per-pixel calculations.</p>
+
+<h5>Geometry Shader Expansion:</h5>
+        <p>
+          The geometry shader converts point primitives into screen-aligned quads that encompass
+each Gaussian's influence area. The shader:</p>
+          <ul>
+          <li><b>Computes 2D Ellipse Parameters:</b> Extracts major and minor axes from the 2D
+covariance matrix using eigenvalue decomposition.</li>
+          <li><b>Generates Quad Vertices:</b> Creates four vertices positioned to cover the Gaussian's
+3-sigma extent</li>
+          <li><b>Applies Guard Band Clipping:</b> Discards primitives that fall outside the visible area
+to improve performance.</li>
+        </ul>
+<p>The ellipse computation uses the covariance matrix to determine the proper orientation and
+size of each splat in screen space.</p>
+
+<h5>Fragment Shader Evaluation</h5>
+
+<p>The fragment shader computes the final Gaussian contribution for each pixel:</p>
+        <ul>
+          <li><b>Distance Calculation:</b> Computes the distance from the fragment position to the
+Gaussian center.</li>
+          <li><b>Gaussian Evaluation:</b> Applies the exponential falloff function using the inverse
+covariance matrix.</li>
+          <li><b>Alpha Blending:</b> Combines the Gaussian value with the opacity for proper
+transparency.</li>
+        </ul>
+
+<p>The shader includes an alpha threshold test that discards fragments with negligible
+contribution, improving fill rate performance.</p>
+
+        <h4><b>Performance Optimizations</b></h4>
+
+        <p>The implementation includes several performance optimizations:</p>
+        <ul>
+          <li><b>Buffer Device Addressing:</b> Uses Vulkan's buffer device address feature for efficient
+GPU memory access.</li>
+          <li><b>Covariance Matrix Inversion:</b> Pre-computes matrix inverses in the geometry shader
+to avoid per-fragment calculations.</li>
+          <li><b>Early Fragment Discarding:</b> Implements alpha testing to reduce overdraw.</li>
+          <li><b>Memory-Efficient Storage:</b> Packs data structures to minimize memory bandwidth
+requirements.
+</li>
+        </ul>
+        </div>
+        <!-------------------------------------------------------------------------------->
+        <div id="cascade-shadow-mapping" class="section-content" style="display: none;">
+        <h1><b>Cascade Shadow Mapping:</b></h1><br>
+                <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/lava_cascade_exp.mp4" type="video/mp4">
+        </video><br><br>
+        <p>
+          The Lava Engine implements Cascaded Shadow Mapping (CSM), an advanced shadow
+          rendering technique that addresses the fundamental limitations of traditional shadow
+          mapping when dealing with large-scale scenes and distant viewing ranges. This
+          implementation provides high-quality shadows across varying distances while maintaining
+          optimal GPU memory usage and rendering performance.
+        </p>
+        <p>
+          Cascaded Shadow Mapping solves three critical problems inherent in basic shadow
+          mapping: inefficient shadow map coverage that doesn't focus on the visible area, poor
+          orthographic projection fitting that wastes resolution on non-visible regions, and blurry
+          shadows at distance due to insufficient resolution distribution. The technique leverages the
+          insight that shadow detail requirements decrease with distance from the camera, allowing for
+          intelligent resource allocation across multiple shadow map cascades.
+        </p>
+        <h4><b>Theoretical Foundation and Algorithm Overview</b></h4>
+        <p>
+          The core principle of Cascaded Shadow Mapping lies in dividing the camera's view frustum
+          into multiple sub-frusta, each with its own dedicated shadow map. This division enables
+          optimal resolution distribution: near objects receive high-resolution shadow maps for crisp
+          detail, while distant objects use lower effective resolution that remains imperceptible due to
+          distance attenuation.
+        </p>
+        <p>
+          The high-level algorithm proceeds through several distinct phases:
+        </p>
+        <ol>
+          <li><b>Frustum Subdivision:</b> The camera's view frustum is divided into n cascades, where
+          each cascade covers a specific depth range from the camera.</li>
+          <li><b>Cascade Fitting:</b> For each cascade, a tightly-fitting orthographic projection matrix is
+          computed to maximize shadow map utilization.</li>
+          <li><b>Multi-Pass Shadow Rendering:</b> Shadow maps are rendered for each cascade from
+          the directional light's perspective.</li>
+          <li><b>Cascade Selection:</b> During scene rendering, fragments select the appropriate
+          cascade based on their depth from the camera.</li>
+          <li><b>Shadow Sampling:</b> The fragment shader samples from the selected cascade's
+          shadow map with appropriate bias adjustments.</li>
+        </ol>
+        <h4><b>Frustum Analysis and World Space Transformation</b></h4>
+        <p>
+          The implementation begins with sophisticated frustum analysis that transforms the camera's
+          perspective frustum into world space coordinates. This transformation enables precise
+          calculation of shadow map bounds for each cascade.
+        </p>
+        <p>
+          The frustum corner calculation utilizes the mathematical relationship between NDC
+          (Normalized Device Coordinates) space and world space. Since the projection and view
+          matrices transform world coordinates into the NDC cube (with coordinates ranging from -1 to
+          1, except z), the inverse transformation can recover world space frustum corners:
+        </p>
+        <pre>std::vector&lt;glm::vec4> getFrustumCornersWorldSpace(const glm::mat4& proj, const glm::mat4& view) {
+  const auto inv = glm::inverse(proj * view);
+  std::vector&lt;glm::vec4> frustumCorners;
+
+  for (unsigned int x = 0; x &lt; 2; ++x) {
+    for (unsigned int y = 0; y &lt; 2; ++y) {
+      for (unsigned int z = 0; z &lt; 2; ++z) {
+        const glm::vec4 pt = inv * glm::vec4(
+          2.0f * x - 1.0f,
+          2.0f * y - 1.0f,
+          z,
+          1.0f);
+        frustumCorners.push_back(pt / pt.w);
+      }
+    }
+  }
+  return frustumCorners;
+}</pre>
+        <p>
+          This approach generates the eight corner points of each cascade's frustum in world space,
+          providing the foundation for optimal shadow map fitting.
+        </p>
+        <h4><b>Light Space Matrix Computation</b></h4>
+       
+        <p>
+          For each cascade, the system computes a specialized light-space transformation matrix that
+          optimally captures the frustum's shadow-casting geometry. This computation involves two
+          components: the light view matrix and the light projection matrix.
+        </p>
+         <h5>Light View Matrix Construction</h5>
+        <p>
+          The light view matrix positions the virtual camera at the light source, looking toward the
+          cascade's center. The frustum center is calculated by averaging all corner positions,
+          providing a stable point of focus:
+        </p>
+        <pre>glm::vec3 center = glm::vec3(0, 0, 0);
+for (const auto& v : corners) {
+  center += glm::vec3(v);
+}
+center /= corners.size();
+
+glm::mat4 light_view = GenerateViewMatrix(center, light_transform_it->value().rot_);</pre>
+        <h5>Optimal Orthographic Projection Fitting</h5>
+        <p>
+          The light projection matrix requires careful computation to achieve maximum shadow map
+          utilization. The system transforms all frustum corners into light view space, then determines
+          the minimal bounding box that encompasses all geometry:
+        </p>
+        <pre>float minX = std::numeric_limits&lt;float>::max();
+float maxX = std::numeric_limits&lt;float>::lowest();
+// Similar declarations for Y and Z axes
+
+for (const auto& v : corners) {
+  const auto trf = lightView * v;
+  minX = std::min(minX, trf.x);
+  maxX = std::max(maxX, trf.x);
+  // Similar operations for Y and Z
+}</pre>
+        <p>
+          The implementation includes sophisticated Z-range extension to capture shadow-casting
+          geometry outside the immediate frustum:
+        </p>
+        <pre>constexpr float zMult = 10.0f;
+if (minZ &lt; 0) {
+  minZ *= zMult;
+} else {
+  minZ /= zMult;
+}
+// Similar logic for maxZ</pre>
+        <p>
+          This extension ensures that objects behind or in front of the cascade can cast shadows into
+          the visible area, preventing shadow popping artifacts.
+        </p>
+        <h4><b>Vulkan Integration and Resource Management</b></h4>
+        <p>
+          The Lava Engine's implementation adapts the CSM technique for Vulkan's explicit resource
+management model, utilizing modern GPU features for optimal performance.
+        </p>
+        <h5>Texture Array Implementation</h5>
+        <p>
+          Rather than managing individual shadow map textures, the system employs Vulkan's 2D
+          texture arrays to store all cascade shadow maps in a single resource:
+        </p>
+        <pre>// Vulkan texture array creation
+VkImageCreateInfo imageInfo{};
+imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+imageInfo.imageType = VK_IMAGE_TYPE_2D;
+imageInfo.extent.width = depthMapResolution;
+imageInfo.extent.height = depthMapResolution;
+imageInfo.extent.depth = 1;
+imageInfo.mipLevels = 1;
+imageInfo.arrayLayers = cascadeCount;
+imageInfo.format = VK_FORMAT_D32_SFLOAT;
+imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
+VK_IMAGE_USAGE_SAMPLED_BIT;</pre>
+        <p>
+          This approach provides several advantages:
+        </p>
+        <ul>
+          <li><b>Efficient Memory Management:</b> Single allocation for all cascades.</li>
+          <li><b>Simplified Binding:</b> Single descriptor set binding for all shadow maps.</li>
+          <li><b>Cache Efficiency:</b> Improved GPU cache utilization through spatial locality.</li>
+        </ul>
+        <h5>Multi-Layer Rendering with Geometry Shaders</h5>
+        <p>
+          The shadow map rendering process utilizes Vulkan's layered rendering capabilities through
+          geometry shaders. This enables simultaneous rendering to all cascade layers in a single
+          draw call:
+        </p>
+        <pre>#version 450
+layout(triangles, invocations = 4) in;
+layout(triangle_strip, max_vertices = 3) out;
+layout(set = 0, binding = 0) uniform LightSpaceMatrices {
+  mat4 lightSpaceMatrices[MAX_CASCADES];
+};
+void main() {
+  for (int i = 0; i &lt; 3; ++i) {
+    gl_Position = lightSpaceMatrices[gl_InvocationID] * gl_in[i].gl_Position;
+    gl_Layer = gl_InvocationID;
+    EmitVertex();
+  }
+EndPrimitive();
+}</pre>
+        <p>
+          This geometry shader implementation generates multiple instances of each triangle, one for
+          each cascade, with appropriate transformations applied.
+        </p>
+        <h4><b>Fragment Shader Integration and Cascade Selection</b></h4>
+        <p>
+          The fragment shader implements sophisticated cascade selection logic that determines the
+          appropriate shadow map based on fragment depth:
+        </p>
+        <pre>// Transform fragment to view space for depth calculation
+vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
+float depthValue = abs(fragPosViewSpace.z);
+
+// Select appropriate cascade
+int layer = -1;
+for (int i = 0; i &lt; cascadeCount; ++i) {
+  if (depthValue &lt; cascadePlaneDistances[i]) {
+    layer = i;
+    break;
+  }
+}
+if (layer == -1) {
+  layer = cascadeCount;
+}
+// Transform to selected cascade's light space
+vec4 fragPosLightSpace = lightSpaceMatrices[layer] * vec4(fragPosWorldSpace, 1.0);</pre>
+        <h4><b>Adaptive Bias Computation</b></h4>
+        <p>
+          One of the most sophisticated aspects of the CSM implementation is the adaptive bias
+          system that prevents shadow acne while maintaining shadow accuracy across different
+          cascade scales. Since each cascade covers different world space areas, a uniform bias
+          would be either insufficient for near cascades or excessive for distant ones.
+        </p>
+        <p>
+          The implementation scales bias inversely with cascade distance:
+        </p>
+        <pre>float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+if (layer == cascadeCount) {
+  bias *= 1.0 / (farPlane * 0.5f);
+} else {
+  bias *= 1.0 / (cascadePlaneDistances[layer] * 0.5f);
+}</pre>
+        <p>
+          This adaptive approach ensures consistent shadow quality across all cascade levels while
+          preventing depth fighting artifacts.
+        </p>
+        <h4><b>PCF Integration and Quality Enhancement</b></h4>
+        <p>
+          The system integrates Percentage Closer Filtering (PCF) with the cascade shadow maps to
+          provide smooth shadow edges. The PCF implementation samples multiple points around
+          each fragment's shadow map coordinate:
+        </p>
+        <pre>float shadow = 0.0;
+vec2 texelSize = 1.0 / vec2(textureSize(shadowMap, 0));
+for(int x = -1; x &lt;= 1; ++x) {
+  for(int y = -1; y &lt;= 1; ++y) {
+    float pcfDepth = texture(shadowMap, vec3(projCoords.xy + vec2(x, y) * texelSize, layer)).r;
+    shadow += (currentDepth - bias) &gt; pcfDepth ? 1.0 : 0.0;
+  }
+}
+shadow /= 9.0;</pre>
+        <h4><b>Performance Optimization Strategies</b></h4>
+        <p>
+          The implementation includes several optimization techniques to maintain high performance:
+        </p>
+        <h5>Culling Optimizations</h5>
+        <p>
+          The system performs cascade-aware frustum culling, rendering only objects that can
+          potentially cast shadows into each cascade. This reduces the geometric complexity of
+          shadow map rendering.
+        </p>
+        <h5>Resolution Scaling</h5>
+        <p>
+          Different cascades can use different shadow map resolutions based on their importance and
+          distance from the camera, further optimizing memory usage and rendering performance.
+        </p>
+        <h5>Temporal Stability</h5>
+        <p>
+          The implementation includes stabilization techniques that prevent shadow map jittering
+          during camera movement, ensuring temporal coherence in the shadow rendering.
+        </p>
+        <h4><b>Integration with Deferred Rendering Pipeline</b></h4>
+        <p>
+          The CSM system integrates seamlessly with the Lava Engine's deferred rendering pipeline.
+          Shadow calculation occurs during the lighting pass, where G-Buffer information provides the
+          necessary world position and normal data for accurate shadow computation.
+        </p>
+        <p>
+          This integration enables efficient multi-light scenarios where directional lights can each
+          maintain their own cascade shadow maps, providing comprehensive shadowing for complex
+          lighting environments.
+        </p>
+        <p>
+          The Cascaded Shadow Mapping implementation in the Lava Engine represents a
+          sophisticated approach to high-quality shadow rendering that balances visual fidelity with
+          performance requirements. By intelligently distributing shadow map resolution across
+          distance ranges and leveraging Vulkan's advanced rendering features, the system delivers
+          professional-quality shadows suitable for demanding real-time graphics applications.
+        </p>
+
+        </div>
+
+        <div id="pbr" class="section-content" style="display: none;">
+        <h1><b>PBR:</b></h1><br>
+                        <video autoplay loop muted playsinline  style="width: 70%; height: auto; transform: translateX(15%);" preload="auto">
+          <source src="assets/img/portfolio/Explanations/lava_pbr_exp.mp4" type="video/mp4">
+        </video><br><br>
+        <p>
+          The Lava Engine implements a comprehensive Physically Based Rendering (PBR) pipeline
+          that begins with sophisticated tangent-space normal mapping, forming the foundation for
+          realistic surface detail representation. This implementation follows modern graphics
+          rendering principles while being specifically adapted for Vulkan's explicit resource
+          management and modern GPU architectures.
+        </p>
+        <h4><b>Normal Mapping Foundation</b></h4>
+        <p>
+          Traditional mesh rendering suffers from an inherent limitation: surfaces appear perfectly flat
+          under lighting because they use uniform normal vectors across entire faces. Real-world
+          surfaces, however, exhibit countless micro-details, bumps, cracks, and variations that
+          significantly affect how light interacts with the material. Normal mapping addresses this
+          limitation by providing per-fragment normal information, allowing the lighting system to
+          simulate complex surface detail.
+        </p>
+        <p>
+          The technique works by storing normal vector information in 2D textures, where each pixel
+          represents a normal vector encoded as RGB color values. Since normal vectors have
+          components ranging from -1 to 1, they must be remapped to the texture's 0 to 1 color range:
+        </p>
+        <pre>vec3 rgb_normal = normal * 0.5 + 0.5; // transforms from [-1,1] to [0,1]</pre>
+        <p>
+          This encoding explains why normal maps predominantly appear blue-tinted: most surface
+          normals point generally outward (positive Z direction), corresponding to blue in the RGB
+          encoding scheme.
+        </p>
+        <h4><b>Tangent Space Mathematics</b></h4>
+        <p>
+          The critical insight in normal mapping lies in coordinate space selection. Naive
+          implementations store normals in world space, which creates immediate problems when the
+          same normal map is applied to surfaces with different orientations. A brick texture's normal
+          map designed for a vertical wall becomes incorrect when applied to a horizontal floor.
+        </p>
+        <p>
+          Tangent space solves this fundamental problem by providing a local coordinate system for
+          each surface point. In tangent space, the surface normal always points along the positive
+          Z-axis, regardless of the surface's world-space orientation. This local coordinate system
+          consists of three orthogonal vectors:
+        </p>
+        <ul>
+          <li><b>Tangent (T):</b> Points along the surface in the direction of increasing U texture
+          coordinates.</li>
+          <li><b>Bitangent (B):</b> Points along the surface in the direction of increasing V texture
+          coordinates.</li>
+          <li><b>Normal (N):</b> Points perpendicular to the surface, completing the right-handed
+          coordinate system.</li>
+        </ul>
+        <h4><b>TBN Matrix Construction</b></h4>
+        
+        <p>
+          The transformation between tangent space and world space requires computing the
+          Tangent-Bitangent-Normal (TBN) matrix. This matrix enables conversion of normal vectors
+          from the local tangent space coordinate system to world space coordinates where lighting
+          calculations occur.
+        </p>
+        <h5>Mathematical Derivation</h5>
+        <p>
+          The tangent and bitangent vectors can be computed mathematically from triangle vertices
+          and their corresponding texture coordinates. Given two edges of a triangle and their texture
+          coordinate differences, the system of equations becomes:
+        </p>
+        <pre>E₁ = ΔU₁T + ΔV₁B
+E₂ = ΔU₂T + ΔV₂B</pre>
+        <p>
+          Where E represents edge vectors and ΔU, ΔV represent texture coordinate differences. This
+          system can be expressed in matrix form and solved for T and B:
+        </p>
+        <pre>
+[T] _  1  [ΔV₂ -ΔV₁] [E₁]
+[B] ‾ <span style="text-decoration:overline">det</span> [-ΔU₂ ΔU₁] [E₂]
+
+Where det = ΔU₁ΔV₂ - ΔU₂ΔV₁</pre>
+        <h5>Implementation in GLTF Loading</h5>
+        <p>
+          The Lava Engine implements TBN matrix calculation during GLTF mesh processing when
+          normal maps are detected:
+        </p>
+        <pre>// Calculate tangent and bitangent for each triangle
+for (int i = 0; i &lt; combinedIndices.size() - 2; i += 3) {
+  // Calculate triangle edges
+  edge1 = combinedVertices[combinedIndices[i+1]].position - combinedVertices[combinedIndices[i]].position;
+  edge2 = combinedVertices[combinedIndices[i+2]].position - combinedVertices[combinedIndices[i]].position;
+  // Calculate UV deltas
+  deltaUV1.x = combinedVertices[combinedIndices[i+1]].uv_x - combinedVertices[combinedIndices[i]].uv_x;
+  deltaUV1.y = combinedVertices[combinedIndices[i+1]].uv_y - combinedVertices[combinedIndices[i]].uv_y;
+  deltaUV2.x = combinedVertices[combinedIndices[i+2]].uv_x - combinedVertices[combinedIndices[i]].uv_x;
+  deltaUV2.y = combinedVertices[combinedIndices[i+2]].uv_y - combinedVertices[combinedIndices[i]].uv_y;
+  // Calculate determinant and tangent/bitangent
+  float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+  tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+  tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+  tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+  bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+  bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+  bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+  // Assign to all three vertices of the triangle
+  // [Memory pointer manipulation code for efficient assignment]
+}</pre>
+        <p>
+          This implementation uses efficient memory pointer manipulation to directly assign computed
+          tangent and bitangent vectors to vertices, avoiding redundant calculations and ensuring
+          optimal performance during asset loading.
+        </p>
+        <h4><b>Vulkan Shader Implementation</b></h4>
+        <p>
+          The Lava Engine's Vulkan implementation employs optimized shader techniques that
+          leverage modern GPU capabilities while maintaining compatibility with the PBR pipeline.
+        </p>
+        <h5>Vertex Shader Processing</h5>
+        <p>
+          The vertex shader constructs the TBN matrix in world space using push constants for
+          efficient data transfer:
+        </p>
+        <pre>#version 450
+
+struct Vertex {
+  vec3 position;
+  float uv_x;
+  vec3 normal;
+  float uv_y;
+  vec4 color;
+  vec3 tangent;
+  float padding1;
+  vec3 bitangent;
+  float padding2;
+};
+layout(push_constant) uniform constants {
+  mat4 render_matrix;
+  VertexBuffer vertexBuffer;
+} PushConstants;
+
+layout(location = 4) out mat3 TBN;
+
+void main() {
+  Vertex v = PushConstants.vertexBuffer.vertices[gl_VertexIndex];
+  
+  // Transform position to world space
+  vec4 pos = PushConstants.render_matrix * vec4(v.position, 1.0);
+  gl_Position = globalData.viewproj * pos;
+  // Normal Mapping Calculations - transform basis vectors to world space
+  vec3 T = normalize(vec3(PushConstants.render_matrix * vec4(v.tangent, 0.0)));
+  vec3 B = normalize(vec3(PushConstants.render_matrix * vec4(v.bitangent, 0.0)));
+  vec3 N = normalize(vec3(PushConstants.render_matrix * vec4(v.normal, 0.0)));
+  // Construct TBN matrix for tangent-to-world transformation
+  TBN = mat3(T, B, N);
+  outNormal = N;
+  outUV.x = v.uv_x;
+  outUV.y = v.uv_y;
+}</pre>
+        <h5>World Space Normal Transformation Strategy</h5>
+        <p>
+          The implementation uses the "transform-to-world-space" approach, transforming normal
+          map vectors from tangent space to world space where all lighting calculations occur. This
+          approach provides consistent lighting integration with the engine's broader rendering pipeline
+          while maintaining computational efficiency.
+        </p>
+        <p>
+          The vertex shader transforms the tangent, bitangent, and normal vectors to world space
+          using the model matrix (render_matrix), creating a TBN matrix that converts tangent-space
+          normals to world-space normals. The use of vec4 with w=0.0 ensures proper handling of
+          direction vectors during transformation.
+        </p>
+        <h4><b>Fragment Shader Integration</b></h4>
+        <p>
+          The fragment shader performs normal map sampling and transforms the result to world
+          space for lighting calculations:
+        </p>
+        <pre>#version 450
+layout(set = 1, binding = 1) uniform sampler2D normalTex;
+layout(set = 1, binding = 4) uniform LavaPBRMaterialProperties {
+  float metallic_factor_;
+  float roughness_factor_;
+  float specular_factor_;
+  float opacity_mask_;
+  float use_normal_;
+} properties;
+
+layout(location = 2) in vec3 inNormal;
+layout(location = 4) in mat3 TBN;
+vec3 useNormal;
+
+void main() {
+  // Sample normal map and decode from [0,1] to [-1,1]
+  vec3 normalMap = texture(normalTex, inUV).rgb;
+  normalMap = normalMap * 2.0 - 1.0;
+  // Transform tangent-space normal to world space
+  normalMap = normalize(TBN * normalMap);
+  // Conditional normal selection based on material properties
+  useNormal = (properties.use_normal_ == 0.0) ? inNormal : normalMap;
+  // Continue with lighting calculations using useNormal...
+}</pre>
+        <p>
+          This implementation includes a conditional normal selection mechanism that allows
+          materials to optionally disable normal mapping through the use_normal_ property,
+          providing flexibility in material definition while maintaining performance.
+        </p>
+        <h4><b>Advanced Vertex Structure Design</b></h4>
+        <p>
+          The engine uses a sophisticated vertex structure that supports tangent space calculations
+          while maintaining memory efficiency:
+        </p>
+        <pre>struct Vertex {
+  vec3 position;
+  float uv_x;
+  vec3 normal;
+  float uv_y;
+  vec4 color;
+  vec3 tangent;
+  float padding1;
+  vec3 bitangent;
+  float padding2;
+};</pre>
+        <p>
+          This structure design provides several advantages:
+        </p>
+        <ul>
+          <li><b>Interleaved Layout:</b> UV coordinates are interleaved with geometry data for better
+          cache performance.</li>
+          <li><b>Proper Alignment:</b> Padding ensures proper 16-byte alignment for GPU access.</li>
+          <li><b>Compact Storage:</b> Efficient memory usage while maintaining all necessary data for
+          PBR rendering.</li>
+        </ul>
+        <h4><b>Integration with Multi-Light Rendering</b></h4>
+        <p>The normal mapping system integrates seamlessly with the engine's multi-light rendering
+        pipeline, supporting:
+        </p>
+        <h5>Directional Lights with Cascade Shadow Mapping</h5>
+        <pre>vec3 DirectionalLight() {
+  vec3 normal_norm = normalize(useNormal);
+  float directionalIncidence = max(dot(normal_norm, light.dir), 0.0);
+
+  // Specular calculation using transformed normal
+  vec3 viewDirection = normalize(globalData.cameraPos - inPos.xyz);
+  vec3 reflectDirection = reflect(-light.dir, normal_norm);
+  float specularValue = pow(max(dot(viewDirection, reflectDirection), 0.0), light.shininess);
+
+  vec3 diffuse = directionalIncidence * light.diff_color;
+  vec3 specular = light.strength * specularValue * light.spec_color;
+  return diffuse + specular;
+}</pre>
+        <h5>Point and Spot Lights</h5>
+        <p>
+          The system provides consistent normal mapping support across all light types, with proper
+          attenuation and intensity calculations that respect the surface detail provided by normal
+          maps.
+        </p>
+        <h4><b>Material Property Integration</b></h4>
+        <p>
+          The PBR material system includes comprehensive support for normal mapping through the
+          <span style="color: rgb(66, 147, 109);">LavaPBRMaterialProperties</span> uniform buffer:
+        </p>
+        <pre>layout(set = 1, binding = 4) uniform LavaPBRMaterialProperties {
+  float metallic_factor_;
+  float roughness_factor_;
+  float specular_factor_;
+  float opacity_mask_;
+  float use_normal_; // Enable/disable normal mapping per material
+} properties;</pre>
+        <p>
+          This design allows for runtime control over normal mapping on a per-material basis, enabling
+          both performance optimization and artistic flexibility.
+        </p>
+        <h4><b>Performance Optimizations</b></h4>
+        <p>The implementation includes several optimization strategies:</p>
+        <h5>Conditional Normal Map Usage</h5>
+        <p>
+          The <span style="color: rgb(71, 101, 202);">use_normal_</span> property allows materials to bypass normal map processing when not
+          needed, improving performance for simple materials while maintaining the full pipeline for
+          complex materials.
+        </p>
+        <h5>Efficient Tangent Calculation</h5>
+        <p>
+          Tangent vectors are computed during asset loading rather than runtime, ensuring that the
+          computational cost is paid once during preprocessing rather than every frame.
+        </p>
+        <h5>Push Constants for Matrix Data</h5>
+        <p>
+          The use of push constants for the render matrix provides efficient per-object transformation
+          data transfer, avoiding the overhead of uniform buffer updates for frequently changing
+          transformation data.
+        </p>
+        <h4><b>Foundation for Complete PBR Pipeline</b></h4>
+        <p>
+          The tangent space normal mapping system provides the essential foundation for the
+          engine's complete PBR material system. The accurate surface normal information enables
+          proper interaction with:
+        </p>
+        <ul>
+          <li><b>Physically Based Lighting Models:</b> Accurate normal information is crucial for
+          realistic light reflection and scattering calculations.</li>
+          <li><b>Multi-Light Scenarios:</b> Each light source interacts correctly with the detailed surface
+          normals provided by normal mapping.</li>
+        </ul>
+        <p>
+          This sophisticated normal mapping implementation demonstrates the careful balance
+          between mathematical accuracy, performance optimization, and integration with modern
+          rendering pipelines, providing the foundation for professional-quality PBR rendering in the
+          Lava Engine.
+        </p>
+
+        </div>
+
       </div>
 
 
@@ -565,6 +1364,29 @@ void LavaJobSystem::run_tasks() {
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const buttons = document.querySelectorAll('.btn-group .btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Reset all buttons to outline
+          buttons.forEach(b => {
+            b.classList.remove('btn-primary');
+            b.classList.add('btn-outline-primary');
+          });
+          // Set clicked to primary
+          this.classList.remove('btn-outline-primary');
+          this.classList.add('btn-primary');
+          // Hide all sections
+          document.querySelectorAll('.section-content').forEach(sec => sec.style.display = 'none');
+          // Show selected
+          const sectionId = this.getAttribute('data-section');
+          document.getElementById(sectionId).style.display = 'block';
+        });
+      });
+    });
+  </script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
