@@ -105,10 +105,11 @@
               <h4>Junior Programmer</h4>
               <h5>2025 - Present</h5>
               <p><em>Brainstorm Multimedia</em></p>
-              <p>Working on the maintenance and evolution of an in-house real-time rendering engine. My contributions include the development and optimization of a 
-                Gaussian Splatting renderer, work on the camera calibration pipeline with a focus on lens distortion, the implementation of font rendering systems, 
-                including glyph representation and shaping, among other rendering and engine-level features.<br> I collaborate closely with senior engineers on low-level 
-                rendering features, performance optimization, and debugging production code.</p>
+              <p>Working on the maintenance and evolution of an in-house real-time rendering engine. My contributions include the development and optimization of a
+                Gaussian Splatting renderer, adding VR support to the engine through OpenXR, work on the camera calibration pipeline with a focus on lens distortion, the implementation
+                of font rendering systems including glyph representation and shaping, the development of a low-latency GPU-direct display output bypassing the compositor
+                entirely, among other rendering and engine-level features.<br> I collaborate closely with senior engineers on low-level rendering features, performance
+                optimization, and debugging production code.</p>
             </div><!-- Edn Resume Item -->
           </div>
 
@@ -116,6 +117,18 @@
 
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
             <h3 class="resume-title">Personal Projects</h3>
+
+            <div class="resume-item">
+              <h4>Lancer HUD (Embedded) - ESP32 </h4>
+              <h5>2026</h5>
+              <p><em>Solo Developer </em></p>
+              <p><em>Personal Project </em></p>
+              <p>A navigation display for my Mitsubishi Lancer, built on an ESP32-S3 with a small ILI9341 screen and written in C with ESP-IDF and FreeRTOS. It shows the turn-by-turn instructions sent from my phone
+                over Bluetooth, together with a real-time 3D model of the car and live data (fuel, coolant temperature, odometer and doors) read directly from the car's CAN bus.<br>
+                Everything is rendered by the CPU, without GPU or graphics libraries. Based on my previous software rasterizer, I built a pipeline that renders on one core while the other sends the previous frame by DMA,
+                with bucket-sorted depth ordering instead of a z-buffer, supersampled anti-aliasing only around the car, animated perspective lane lines and a tire smoke particle system.<br>
+                I also reverse-engineered the CAN messages of the car myself to find the signals I needed, and worked out the wiring to connect to its low speed cabin bus. <a href="Lancer_HUD.html">More...</a></p>
+            </div><!-- Edn Resume Item -->
 
             <div class="resume-item">
               <h4>Tiris (Steam) - Unreal </h4>

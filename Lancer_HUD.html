@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Lancer HUD</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Personal
+  * Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
+  * Updated: Nov 04 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="portfolio-details-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="resume.html">Resume</a></li>
+          <li><a href="portfolio.html" class="active">Portfolio</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Lancer HUD</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-8">
+            <div class="portfolio-details-slider swiper init-swiper">
+
+              <script type="application/json" class="swiper-config">
+                {
+                  "loop": true,
+                  "speed": 600,
+                  "autoplay": {
+                    "delay": 5000
+                  },
+                  "slidesPerView": "auto",
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "type": "bullets",
+                    "clickable": true
+                  }
+                }
+              </script>
+
+              <div class="swiper-wrapper align-items-center">
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/lancer_0.jpg" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/lancer_1.jpg" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/lancer_2.jpg" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/lancer_3.jpg" alt="">
+                </div>
+
+              </div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
+              <h3>Project information</h3>
+              <ul>
+                <li><strong>Topic</strong>: Embedded / Graphic Programming</li>
+                <li><strong>Hardware</strong>: ESP32-S3, ILI9341, SN65HVD230</li>
+                <li><strong>Framework</strong>: ESP-IDF (FreeRTOS)</li>
+                <li><strong>Language</strong>: C</li>
+                <li><strong>Project date</strong>: 2026</li>
+                <li><strong>Personal Project</strong></li>
+              </ul>
+            </div>
+            <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
+              <h2>About the Project</h2>
+              <p>
+                A small screen for my Mitsubishi Lancer that shows the turn-by-turn navigation from my
+                phone, together with a 3D model of the car and the real data of the car (fuel, coolant
+                temperature, odometer and doors) read directly from its CAN bus. Everything is drawn by the
+                CPU of an ESP32, without GPU and without any graphics library.
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <br>
+        <p>
+          I love old cars. I like how tactile they are, real buttons, real knobs, nothing hidden behind a
+          touchscreen. But let's be honest, nowadays navigation is just too useful to not have it in the car,
+          and a phone stuck to the windshield never felt right to me. So I decided to add it myself. The idea was simple, a
+          cheap 2.8" display behind the steering wheel that tells me where to turn, so I don't have to look at
+          the phone while driving. Obviously it got a bit out of hand, and it ended up being a small 3D engine
+          running on a microcontroller.
+          <br><br>
+          The 3D part is based on my <a href="Software_Rasterizer.html">Software Rasterizer</a>. I ported the
+          same triangle filling function to the ESP32 and built everything around it, so this project is kind
+          of the continuation of that one, but with much less memory, much less CPU and a real use at the end.
+          The following sections explain the most interesting parts.
+        </p>
+        <br>
+
+        <h1>Hardware</h1>
+        <br>
+        <p>
+          The brain is an ESP32-S3 with external PSRAM, connected to an ILI9341 display of 240x320 pixels
+          through SPI at 40MHz. To read the car I use a SN65HVD230 CAN transceiver connected to the CAN-B of
+          the Lancer, which is the low speed bus of the cabin (83.3 kbps) where the cluster, doors and body
+          modules talk to each other. The ESP32 is configured in listen-only mode, so it never transmits or
+          acknowledges anything, it only listens. I really didn't want to break something in my car.
+          <br><br>
+          The phone sends the navigation instructions over Bluetooth Low Energy in a tiny 6 byte packet
+          (maneuver type, roundabout exit, distance and some flags), so all the drawing and the logic stays on
+          the ESP32.
+        </p>
+        <br>
+
+        <h1>Render Pipeline</h1>
+        <br>
+        <p>
+          Sending a full frame to the display is expensive. 240x320 pixels in 16 bits are 150KB per frame, and
+          SPI is not that fast. If I rendered and then sent the frame, the CPU would be waiting most of the
+          time. So I use two framebuffers in PSRAM and split the work between the two cores of the ESP32. The
+          render task on core 0 draws the next frame while the flush task on core 1 sends the previous one by
+          DMA. They are synchronized with FreeRTOS semaphores, so one never touches the buffer the other is
+          using.
+        </p>
+        <pre>
+static void flush_task(void *arg)
+{
+    while (true) {
+        // Wait for the render task to hand us a finished frame.
+        xSemaphoreTake(frame_ready_sem, portMAX_DELAY);
+
+        // The buffer lives in PSRAM and was written through the cache, flush it
+        esp_cache_msync(buf[flush_idx], SCREEN_W * SCREEN_H * 2,
+                        ESP_CACHE_MSYNC_FLAG_DIR_C2M);
+
+        // Hardware DMA transfer to the panel
+        esp_lcd_panel_draw_bitmap(panel_handle, 0, 0, SCREEN_W, SCREEN_H,
+                                  buf[flush_idx]);
+        xSemaphoreTake(dma_done_sem, portMAX_DELAY);
+
+        // Buffer is free for the render task to reuse.
+        xSemaphoreGive(flush_done_sem);
+    }
+}</pre>
+        <p>
+          Each frame starts by copying a precomputed vignette background instead of clearing to black, so the
+          background effect is basically free.
+        </p>
+        <br>
+
+        <h1>The 3D Car</h1>
+        <br>
+        <p>
+          The car is a low poly model of the Lancer with around 2100 triangles, exported to a C header. Every
+          frame the vertices are rotated with a 3x3 matrix, projected with a simple perspective division and
+          cached, so each vertex is transformed only once even if it is shared by several triangles. The
+          lighting is flat shading against a fixed directional light, with a small fake specular highlight
+          (the shade to the power of three) to give it a bit of shine.
+        </p>
+        <video autoplay loop muted playsinline style="width: 35%; min-width: 260px; height: auto; display: block; margin: 0 auto;" preload="auto">
+          <source src="assets/img/portfolio/Explanations/Lancer_0.mp4" type="video/mp4">
+        </video>
+        <br><br>
+        <h4>Depth Sorting Without a Z-Buffer:</h4>
+        <p>
+          A depth buffer for the whole screen would take another 150KB of memory and one extra read and
+          compare for every pixel, which is too much for this chip. Instead I use the painter's algorithm,
+          drawing the triangles from the back to the front. Sorting 2000 triangles every frame with a normal
+          sort is also slow, so I do a bucket sort. The depth range of the visible triangles is divided in 256
+          buckets, I count how many triangles fall in each one and then place them in order. It is linear
+          time and, for a convex-ish object like a car, the result looks correct.
+        </p>
+        <pre>
+float zscale = (DEPTH_BUCKETS - 1) / range;
+
+memset(depth_count, 0, sizeof(depth_count));
+for (int v = 0; v &lt; vis_count; v++) {
+    int bkt = (int)((vis_z[v] - z_min) * zscale);
+    if (bkt &lt; 0) bkt = 0;
+    if (bkt &gt;= DEPTH_BUCKETS) bkt = DEPTH_BUCKETS - 1;
+    vis_bucket[v] = (uint8_t)bkt;
+    depth_count[bkt]++;
+}
+
+// Far buckets first, so near triangles are painted on top
+uint16_t pos = 0;
+for (int bkt = DEPTH_BUCKETS - 1; bkt &gt;= 0; bkt--) {
+    depth_start[bkt] = pos;
+    pos += depth_count[bkt];
+}
+for (int v = 0; v &lt; vis_count; v++) {
+    sorted_vis[depth_start[vis_bucket[v]]++] = (uint16_t)v;
+}</pre>
+        <p>
+          Before sorting, back facing triangles are discarded with the same cross product test as in the
+          rasterizer, which removes around half of the work.
+        </p>
+        <br>
+        <h4>Anti-Aliasing:</h4>
+        <p>
+          On a screen this small the edges of the triangles looked really bad, full of jagged steps. The
+          solution was supersampling, but only where it matters. I calculate the bounding box of the car on
+          the screen, render only that region at 2x resolution in a separate buffer and then downsample it by
+          averaging every 2x2 block. That way I don't pay the 4x cost for the whole screen, only for the car.
+        </p>
+        <p>
+          One detail that took me a while is that the display expects the RGB565 pixels with the bytes swapped, so
+          every sample has to be un-swapped before separating the channels, and swapped again at the end.
+        </p>
+        <pre>
+for (int x = 0; x &lt; rw; x++) {
+    const uint16_t *blk = base + x * N;
+    unsigned rr = 0, gg = 0, bb = 0;
+    for (int sy = 0; sy &lt; N; sy++) {
+        const uint16_t *srow = blk + sy * ss_pitch;
+        for (int sx = 0; sx &lt; N; sx++) {
+            unsigned s = UNS(srow[sx]);        // undo the byte swap
+            rr += (s &gt;&gt; 11) &amp; 0x1F;
+            gg += (s &gt;&gt; 5)  &amp; 0x3F;
+            bb +=  s        &amp; 0x1F;
+        }
+    }
+    rr &gt;&gt;= 2; gg &gt;&gt;= 2; bb &gt;&gt;= 2;             // divide by 4 samples
+    unsigned o = (rr &lt;&lt; 11) | (gg &lt;&lt; 5) | bb;
+    out[x] = (uint16_t)UNS(o);
+}</pre>
+        <br>
+
+        <h1>Navigation HUD</h1>
+        <br>
+        <p>
+          When a route is active the screen shows animated dashed lane lines drawn under the car that follow
+          the shape of the next maneuver, an icon, the distance and the instruction text on top. The car
+          itself also reacts. Each maneuver (turn left, sharp right, roundabout, U-turn, ramps, forks...) has
+          its own pose, and the car smoothly interpolates to it, so it looks like it is actually taking the
+          turn. And since it is my car, it also leaves a bit of tire smoke behind.
+        </p>
+        <video autoplay loop muted playsinline style="width: 35%; min-width: 260px; height: auto; display: block; margin: 0 auto;" preload="auto">
+          <source src="assets/img/portfolio/Explanations/Lancer_1.mp4" type="video/mp4">
+        </video>
+        <br><br>
+        <p>
+          While the turn is still far away (more than 2km) it just says "Sigue recto" with the remaining
+          distance, since showing a turn arrow for something that is 10 minutes away is more confusing than
+          useful. When no phone is connected the car spins slowly in the middle of the screen, and when the
+          phone is connected but there is no route it stays facing forward with the odometer on top.
+        </p>
+        <br>
+        <h4>Animated Lane Lines:</h4>
+        <p>
+          The lane lines are not images, they are drawn every frame, and there are three different ways of
+          drawing them depending on the maneuver.
+        </p>
+        <p>
+          When going straight there are two dashed lines in perspective, drawn row by row from a vanishing
+          point, so the further down the screen (closer to the camera), the wider apart, thicker and brighter
+          they are.
+        </p>
+        <p>
+          For turns, U-turns and roundabouts the path is a parametric curve. A turn is a straight entry, an arc
+          with the angle of the turn and a straight exit, the U-turn is a half circle and the roundabout is a
+          full ring. I sample the curve in 140 points and offset each one along its normal to get the two
+          edges of the lane.
+        </p>
+        <p>
+          Keep, fork, merge and ramp are built from straight segments, with the branch you have to take drawn
+          bright and the other one dimmed, so you can see both roads but you know which one is yours.
+        </p>
+        <p>
+          The dashes move towards the car to give the feeling of driving forward. To make them move at the
+          same speed along a curve, the dash pattern is based on the distance travelled along the path (the
+          arc length) instead of the screen position, and it scrolls by exactly one dash each cycle, so the
+          loop never jumps. The lines also fade in at the top and fade out at the bottom so they don't have
+          hard ends. Since the shape of a curve only changes when the maneuver changes, all the points,
+          normals, widths and intensities are cached, and each frame only decides which points are part of a
+          dash and draws them.
+        </p>
+        <p>
+          Every point is drawn as a small antialiased dot. Instead of turning pixels on or off, each pixel
+          gets blended towards white depending on how close it is to the center of the dot. This way the
+          lines look smooth and can be placed between pixels, which is important on a screen this small.
+        </p>
+        <pre>
+int glow = (int)(intensity * (1.0f - r2 * inv2) + 0.5f);   // 1 at the center, 0 at the edge
+if (glow &lt;= 0) continue;
+uint16_t cur = dst[idx];
+uint16_t s = (cur &gt;&gt; 8) | (cur &lt;&lt; 8);                         // undo the byte swap
+int r = (s &gt;&gt; 11) &amp; 0x1F, g = (s &gt;&gt; 5) &amp; 0x3F, b = s &amp; 0x1F;
+r = r + (((255 &gt;&gt; 3) - r) * glow) / 100;                      // blend towards white
+g = g + (((255 &gt;&gt; 2) - g) * glow) / 100;
+b = b + (((255 &gt;&gt; 3) - b) * glow) / 100;</pre>
+        <br>
+        <h4>Tire Smoke Particles:</h4>
+        <p>
+          The smoke is a small particle system with a fixed pool of 32 particles, so there are no memory
+          allocations while driving. The tricky part is knowing where to spawn them, because the car is
+          constantly rotating and changing its pose. Every frame I take the four wheel positions of the
+          model, transform them with the same rotation matrix as the car and project them to the screen.
+          The two that end up lowest on the screen are the rear wheels, because they are the ones closest
+          to the camera. The backward direction of the car on screen comes directly from the rotation matrix,
+          so the smoke always goes out from the back, whatever the pose.
+        </p>
+        <pre>
+// Car backward direction in screen space = -(forward), where the
+// model +z axis projects to (m[2], m[5]). Smoke trails along it.
+float fdx = matrix3x3[2], fdy = matrix3x3[5];
+float fl = sqrtf(fdx * fdx + fdy * fdy);
+if (fl &lt; 1e-4f) fl = 1.0f;
+float bdx = -fdx / fl, bdy = -fdy / fl;</pre>
+        <p>
+          Each frame up to three dead particles are reborn at the rear wheels with a bit of randomness in
+          the position, and a velocity that goes backwards and slightly outwards, the left wheel to the left
+          and the right one to the right. For the random numbers I use a tiny xorshift generator, much cheaper
+          than the standard one. As a particle gets older it shrinks and fades, and it is drawn as a soft grey
+          circle with the same kind of blending as the lane dots.
+        </p>
+        <pre>
+// Dead slot: respawn at a wheel (px_, py_ = perpendicular to the backward direction)
+float spd = 1.2f + 0.8f * r2;                                 // backward speed
+float fan = (right ? 1.0f : -1.0f) * (0.10f + 0.20f * r3);    // outward
+p-&gt;vx = bdx * spd + px_ * fan;
+p-&gt;vy = bdy * spd + py_ * fan;
+p-&gt;age = 0.0f;
+p-&gt;life = 18.0f + 10.0f * r3;
+
+// Every frame: move, accelerate backward a touch, and age
+p-&gt;x += p-&gt;vx;
+p-&gt;y += p-&gt;vy;
+p-&gt;vx += bdx * 0.05f;
+p-&gt;vy += bdy * 0.05f;
+p-&gt;age += 1.0f;
+
+float k   = 1.0f - p-&gt;age / p-&gt;life;
+float rad = 1.0f + 5.0f * k;        // big at the wheel, shrinks as it trails
+int inten = (int)(70.0f * k);       // fades as it shrinks
+splat_smoke(dst, p-&gt;x, p-&gt;y, rad, inten);</pre>
+        <p>
+          The smoke is drawn into the frame before the car, so the car covers it and it really looks like it
+          comes from under the wheels.
+        </p>
+        <br>
+
+        <h1>Reading the Car</h1>
+        <br>
+        <p>
+          This was probably the hardest part, and not because of the code. Mitsubishi does not publish what
+          each message on the CAN bus means, so I had to find it myself. I logged the bus while doing things
+          in the car, like opening doors, and looked at which bytes changed. That way I found the doors, the
+          coolant temperature and the odometer. The fuel level was more tricky, because it changes very
+          slowly, so I added a mode that dumps the last value of every message ID, took snapshots with
+          different amounts of fuel in the tank and compared them until only one byte made sense.
+        </p>
+        <pre>
+switch (rx.header.id) {
+case 0x154: if (n &gt; 0) { int f = ((int)b[0] - FUEL_EMPTY) * 100 /
+                                 (FUEL_FULL - FUEL_EMPTY);
+                         g_fuel_pct = f &lt; 0 ? 0 : (f &gt; 100 ? 100 : f); } break;
+case 0x02C: if (n &gt; 1) g_coolant_c = (int)b[1] - 40;                         break;
+case 0x311: if (n &gt; 2) g_odo_km    = ((long)b[0] &lt;&lt; 16) | (b[1] &lt;&lt; 8) | b[2]; break;
+case 0x013: if (n &gt; 2) g_doors     = b[2];                                   break;
+}</pre>
+        <br><br>
+        <img src="assets/img/portfolio/Explanations/lancer_img_0.jpg" alt="" style="width: 50%; display: block; margin: 0 auto;">
+        <br><br>
+
+        <p>
+          The electrical side also taught me a lot. The CAN-B of this car is a fault tolerant, low speed bus,
+          and the SN65HVD230 is designed for the high speed one, so the "obvious" wiring did not work at all.
+          After a lot of trial and error with the wires behind the cluster I got it working, and I ended up
+          understanding much better how CAN works at the electrical level than any course taught me.
+        </p>
+        <br>
+        <h4>Door View:</h4>
+        <p>
+          When a door is opened, the car rotates to a top-down view and, at the exact moment it arrives, it is
+          swapped for a second model with separate doors that open with an animation, showing which ones are
+          open and a "Puerta Abierta" warning. When they close, everything goes back in the reverse order.
+          Everything is interpolated, there is never a hard cut, which was the part that required more tuning
+          to make the two models match perfectly at the swap.
+        </p>
+        <video autoplay loop muted playsinline style="width: 35%; min-width: 260px; height: auto; display: block; margin: 0 auto;" preload="auto">
+          <source src="assets/img/portfolio/Explanations/Lancer_2.mp4" type="video/mp4">
+        </video>
+        <br><br>
+
+        <h1>Small Details</h1>
+        <br>
+        <p>
+          Since this is something I see every day, I spent more time than I would like to admit on small
+          things. There is a boot animation with the Mitsubishi logo fading in and out, and then the background
+          fades in while the car flies into the frame and the gauges slide up from the bottom. The fuel and
+          temperature gauges are always visible at the bottom, and the odometer has its own custom font,
+          thousands separator and an antialiased underline.
+        </p>
+        <video autoplay loop muted playsinline style="width: 35%; min-width: 260px; height: auto; display: block; margin: 0 auto;" preload="auto">
+          <source src="assets/img/portfolio/Explanations/Lancer_3.mp4" type="video/mp4">
+        </video>
+        <br><br>
+        <p>
+          The project is still alive, but it is already
+          installed in the car and I use it every day, which is probably the best part of this project.
+        </p>
+      </div>
+
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
