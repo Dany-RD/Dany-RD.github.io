@@ -381,7 +381,7 @@ float bdx = -fdx / fl, bdy = -fdy / fl;</pre>
           circle with the same kind of blending as the lane dots.
         </p>
         <pre>
-// Dead slot: respawn at a wheel (px_, py_ = perpendicular to the backward direction)
+// Dead slot, respawn at a wheel (px_, py_ = perpendicular to the backward direction)
 float spd = 1.2f + 0.8f * r2;                                 // backward speed
 float fan = (right ? 1.0f : -1.0f) * (0.10f + 0.20f * r3);    // outward
 p-&gt;vx = bdx * spd + px_ * fan;
@@ -389,7 +389,7 @@ p-&gt;vy = bdy * spd + py_ * fan;
 p-&gt;age = 0.0f;
 p-&gt;life = 18.0f + 10.0f * r3;
 
-// Every frame: move, accelerate backward a touch, and age
+// Every frame move, accelerate backward a touch, and age
 p-&gt;x += p-&gt;vx;
 p-&gt;y += p-&gt;vy;
 p-&gt;vx += bdx * 0.05f;
